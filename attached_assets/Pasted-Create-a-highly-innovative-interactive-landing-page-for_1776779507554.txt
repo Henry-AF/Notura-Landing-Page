@@ -1,0 +1,224 @@
+Create a highly innovative, interactive landing page for a SaaS product called "Notura".
+
+Core concept:
+Transform chaos (meetings) into clarity (structured insights) automatically.
+
+The entire page must feel like a live system working in real time as the user scrolls.
+
+Design style:
+- Futuristic, minimal, clean UI
+- Soft gradients (purple/blue tones)
+- Glassmorphism + subtle shadows
+- Smooth micro-interactions
+- Inspired by Apple + Linear + Notion AI
+
+Scrolling behavior:
+- The page is a storytelling experience
+- Each section transitions smoothly into the next
+- Animations are triggered by scroll (parallax + progressive transformation)
+
+-----------------------------------
+
+HERO SECTION (CRITICAL)
+
+Goal:
+Simulate a live meeting being recorded and organized by AI.
+
+Layout:
+- Centered smartphone mockup
+- UI identical to a recording screen (like the reference image)
+
+Animation:
+- "Gravando agora" pulse effect
+- Timer counting up in real time
+- Audio waveform reacting dynamically
+- Subtle mic glow animation
+
+As the user scrolls:
+- The waveform expands
+- The UI starts transforming
+- Text begins to appear as if being transcribed in real time
+
+Headline:
+"O resumo das reuniões para o WhatsApp em minutos"
+
+Subheadline:
+"Grave. A IA organiza. Sua equipe executa."
+
+CTA:
+"Testar gratuitamente"
+
+-----------------------------------
+
+SECTION 2 – TRANSCRIÇÃO EM TEMPO REAL
+
+Transition:
+The recording UI morphs into a transcription interface.
+
+Animation:
+- Audio waveform converts into text lines
+- Words appear progressively (like live typing)
+- Key phrases are auto-highlighted
+
+Visual:
+- Split screen:
+  Left: raw messy transcription
+  Right: AI organizing content
+
+Micro-interactions:
+- Keywords get tagged automatically
+- Speaker labels appear
+
+Message:
+"Enquanto você fala, o Notura entende."
+
+-----------------------------------
+
+SECTION 3 – ORGANIZAÇÃO INTELIGENTE
+
+Transition:
+Messy text reorganizes itself.
+
+Animation:
+- Text blocks rearrange smoothly
+- Content turns into:
+  - Tópicos
+  - Decisões
+  - Próximos passos
+
+UI style:
+- Clean cards
+- Structured layout (Notion-like)
+
+Highlight:
+- AI grouping ideas intelligently
+- Important insights glow subtly
+
+Message:
+"Sem esforço. Sem perder nada."
+
+-----------------------------------
+
+SECTION 4 – RESUMO AUTOMÁTICO
+
+Animation:
+- Everything condenses into a clean summary card
+
+Visual:
+- Before vs After transformation
+- Big contrast (caos → clareza)
+
+Include:
+- Bullet points
+- Action items
+- Key decisions
+
+Message:
+"Em segundos, tudo faz sentido."
+
+-----------------------------------
+
+SECTION 5 – ENVIO PARA WHATSAPP (WOW MOMENT)
+
+Transition:
+The summary card slides into a WhatsApp chat UI.
+
+Animation:
+- Message being typed automatically
+- Green WhatsApp bubble appears
+- "Enviado" check animation
+
+Optional:
+- Notification pop-up effect
+
+Message:
+"Compartilhe com sua equipe instantaneamente."
+
+CTA:
+"Receber no WhatsApp"
+
+-----------------------------------
+
+SECTION 6 – BENEFÍCIOS
+
+Cards with subtle hover animations:
+
+- "Nunca mais perca uma ideia"
+- "Reuniões mais produtivas"
+- "Menos esforço manual"
+- "Execução mais rápida"
+
+Animation:
+- Icons animate on hover
+- Cards slightly lift
+
+-----------------------------------
+
+SECTION 7 – COMO FUNCIONA
+
+3-step visual flow with animation:
+
+1. Grave a reunião
+2. A IA organiza tudo
+3. Receba no WhatsApp
+
+Animation:
+- Step-by-step progression on scroll
+- Line connecting steps animates
+
+-----------------------------------
+
+SECTION 8 – PROVA SOCIAL
+
+- Testimonials appearing with fade + slide
+- Avatars + short quotes
+
+Optional:
+- Animated counters (users, reuniões processadas)
+
+-----------------------------------
+
+SECTION 9 – CTA FINAL
+
+Strong closing section:
+
+Headline:
+"Pare de anotar. Comece a executar."
+
+Subheadline:
+"Deixe o Notura cuidar das suas reuniões."
+
+CTA:
+"Começar agora"
+
+Animation:
+- Subtle background motion
+- CTA glow effect
+
+-----------------------------------
+
+GLOBAL INTERACTIONS
+
+- Smooth scroll (very important)
+- No harsh transitions
+- Everything feels alive
+- Use motion to guide attention
+
+Performance:
+- Lightweight animations
+- Prefer CSS/transform over heavy JS
+
+Tone:
+- Confident, modern, intelligent
+- No corporate fluff
+- Straight to value
+
+-----------------------------------
+
+EXTRA (DIFFERENTIAL IDEA)
+
+Add a "live demo mode":
+- Fake meeting playing silently
+- User sees transformation happening without interaction
+
+-----------------------------------
