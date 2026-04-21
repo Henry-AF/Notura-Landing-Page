@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Router as WouterRouter, Link } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
+import Produtividade from "@/pages/produtividade";
 import { motion, useScroll, useTransform, AnimatePresence, useInView } from "framer-motion";
 import { Mic, Square, Check, CheckCheck, Clock, Settings, User, FileText, ArrowRight, Zap, RefreshCw, Smartphone, CheckCircle2, Play, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ function NavBar() {
       </div>
       <div className="hidden md:flex items-center gap-6">
         <a href="#produto" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Produto</a>
+        <Link href="/produtividade" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Produtividade</Link>
         <a href="#beneficios" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Benefícios</a>
         <a href="#como-funciona" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Como funciona</a>
       </div>
@@ -584,6 +586,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/produtividade" component={Produtividade} />
       <Route component={NotFound} />
     </Switch>
   );
