@@ -5,5 +5,9 @@ export const modules: ModuleMap = {
   "./components/mockups/notura-v2/Clean.tsx": () => import("../components/mockups/notura-v2/Clean.tsx"),
   "./components/mockups/notura-v2/Elevated.tsx": () => import("../components/mockups/notura-v2/Elevated.tsx"),
   "./components/mockups/notura-v2/Sharpened.tsx": () => import("../components/mockups/notura-v2/Sharpened.tsx"),
-  "./components/mockups/notura-v2/Social.tsx": () => import("../components/mockups/notura-v2/Social.tsx")
+  "./components/mockups/notura-v2/Social.tsx": () => import("../components/mockups/notura-v2/Social.tsx"),
+  "./components/mockups/notura-concepts/Dashboard.tsx": () => import("../components/mockups/notura-concepts/Dashboard.tsx"),
+  "./components/mockups/notura-concepts/LiveDemo.tsx": () => import("../components/mockups/notura-concepts/LiveDemo.tsx"),
+  "./components/mockups/notura-concepts/ROICalculator.tsx": () => import("../components/mockups/notura-concepts/ROICalculator.tsx"),
+  "./components/mockups/notura-concepts/Story.tsx": () => import("../components/mockups/notura-concepts/Story.tsx")
 };
