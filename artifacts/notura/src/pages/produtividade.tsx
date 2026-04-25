@@ -21,6 +21,9 @@ import {
   Calendar as CalendarIcon,
   Play,
   Workflow,
+  ArrowRight,
+  Menu,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -75,47 +78,108 @@ function CountUp({
 }
 
 function NavBar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const navLinks = [
+    { label: "Como funciona", href: "#como-funciona" },
+    { label: "Resultados", href: "#resultados" },
+    { label: "Depoimento", href: "#depoimento" },
+  ];
+
+  const scrollTo = (href: string) => {
+    setMenuOpen(false);
+    const el = document.querySelector(href);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 backdrop-blur-md bg-background/70 border-b border-white/10">
-      <Link href="/" className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-white font-bold">
-          N
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "backdrop-blur-md bg-background/80 border-b border-border/60 shadow-sm"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="container px-4 md:px-6 mx-auto flex items-center justify-between h-16 md:h-18">
+        <Link href="/" className="flex items-center gap-2 shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-sm">
+            N
+          </div>
+          <span className="font-display font-bold text-xl tracking-tight text-foreground">
+            Notura
+          </span>
+        </Link>
+
+        <div className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <button
+              key={link.href}
+              onClick={() => scrollTo(link.href)}
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {link.label}
+            </button>
+          ))}
         </div>
-        <span className="font-display font-bold text-xl tracking-tight text-foreground">
-          Notura
-        </span>
-      </Link>
-      <div className="hidden md:flex items-center gap-6">
-        <Link
-          href="/"
-          className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+
+        <div className="hidden md:flex items-center gap-3">
+          <Link
+            href="/"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Entrar
+          </Link>
+          <Button
+            className="rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25 h-9 px-5 text-sm"
+            onClick={() => scrollTo("#cta")}
+          >
+            Começar grátis
+          </Button>
+        </div>
+
+        <button
+          className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground"
+          onClick={() => setMenuOpen((v) => !v)}
         >
-          Produto
-        </Link>
-        <Link
-          href="/produtividade"
-          className="text-sm font-medium text-foreground transition-colors"
-        >
-          Produtividade
-        </Link>
-        <Link
-          href="/"
-          className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Como funciona
-        </Link>
+          {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
       </div>
-      <div className="flex items-center gap-4">
-        <a
-          href="#"
-          className="hidden md:block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Entrar
-        </a>
-        <Button className="rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25">
-          Começar grátis
-        </Button>
-      </div>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-background border-b border-border overflow-hidden"
+          >
+            <div className="container px-4 pb-4 flex flex-col gap-3">
+              {navLinks.map((link) => (
+                <button
+                  key={link.href}
+                  onClick={() => scrollTo(link.href)}
+                  className="text-left text-sm font-medium text-muted-foreground hover:text-foreground py-2"
+                >
+                  {link.label}
+                </button>
+              ))}
+              <Button
+                className="rounded-full bg-primary text-white mt-2"
+                onClick={() => scrollTo("#cta")}
+              >
+                Começar grátis
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
@@ -126,7 +190,7 @@ function HeroSection() {
   const opacity1 = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
-    <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden flex flex-col items-center justify-center min-h-[90vh]">
+    <section className="relative pt-32 pb-20 md:pt-52 md:pb-36 overflow-hidden flex flex-col items-center justify-center min-h-[92vh]">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
 
@@ -143,7 +207,7 @@ function HeroSection() {
         </Badge>
 
         <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-foreground leading-[1.1] mb-6 max-w-5xl">
-          Recupere <br className="md:hidden" />
+          Recupere{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-indigo-500 to-blue-500">
             <CountUp to={8} prefix="+" suffix="h" /> por semana
           </span>
@@ -159,20 +223,41 @@ function HeroSection() {
           <Button
             size="lg"
             className="rounded-full h-14 px-8 bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/25 text-base font-semibold group"
+            onClick={() => {
+              const el = document.querySelector("#cta");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
           >
-            Ver em ação
-            <Play
-              className="ml-2 w-5 h-5 group-hover:scale-110 transition-transform"
-              fill="currentColor"
-            />
+            Começar grátis
+            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
           <Button
             size="lg"
             variant="outline"
             className="rounded-full h-14 px-8 text-base font-semibold bg-background/50 backdrop-blur-sm border-border"
+            onClick={() => {
+              const el = document.querySelector("#como-funciona");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
           >
-            Começar grátis
+            <Play className="mr-2 w-4 h-4" fill="currentColor" />
+            Ver em ação
           </Button>
+        </div>
+
+        <div className="mt-10 flex items-center gap-6 text-sm text-muted-foreground">
+          <span className="flex items-center gap-1.5">
+            <CheckCircle2 className="w-4 h-4 text-green-500" />
+            Sem cartão de crédito
+          </span>
+          <span className="flex items-center gap-1.5">
+            <CheckCircle2 className="w-4 h-4 text-green-500" />
+            Setup em 5 minutos
+          </span>
+          <span className="flex items-center gap-1.5">
+            <CheckCircle2 className="w-4 h-4 text-green-500" />
+            Cancele quando quiser
+          </span>
         </div>
       </motion.div>
 
@@ -223,9 +308,12 @@ function ComparisonSection() {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-secondary/30 relative overflow-hidden">
+    <section id="como-funciona" className="py-24 md:py-32 bg-secondary/30 relative overflow-hidden">
       <div className="container px-4 md:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16">
+          <Badge variant="outline" className="mb-6 rounded-full px-4 py-1.5 border-border text-muted-foreground">
+            Antes vs. Depois
+          </Badge>
           <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-6">
             O fim do caos operacional
           </h2>
@@ -339,8 +427,13 @@ function MetricsSection() {
   ];
 
   return (
-    <section className="py-20 bg-background relative z-10">
+    <section id="resultados" className="py-20 bg-background relative z-10">
       <div className="container px-4 md:px-6">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight">
+            Números que falam por si
+          </h2>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {metrics.map((metric, i) => (
             <motion.div
@@ -390,9 +483,12 @@ function LoopSection() {
   return (
     <section className="py-24 md:py-32 overflow-hidden">
       <div className="container px-4 md:px-6 text-center">
-        <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-16">
+        <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-4">
           O Fluxo Contínuo de Valor
         </h2>
+        <p className="text-lg text-muted-foreground mb-16 max-w-xl mx-auto">
+          Do áudio bruto à execução real, em menos de 60 segundos.
+        </p>
 
         <div className="max-w-5xl mx-auto relative">
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-secondary -translate-y-1/2 hidden md:block rounded-full" />
@@ -454,7 +550,7 @@ function BeforeAfterSection() {
             De ruído a clareza
           </h2>
           <p className="text-lg text-zinc-400">
-            A mágica acontece na extração do que importa. Deslize para ver a
+            A mágica acontece na extração do que importa. Alterne para ver a
             transformação.
           </p>
         </div>
@@ -685,7 +781,7 @@ function CalendarVisualSection() {
 
 function TestimonialSection() {
   return (
-    <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
+    <section id="depoimento" className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-black/10 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
 
@@ -732,18 +828,18 @@ function TestimonialSection() {
 
 function CTASection() {
   return (
-    <section className="py-32 relative">
+    <section id="cta" className="py-32 relative">
       <div className="container px-4 md:px-6">
         <Card className="max-w-5xl mx-auto bg-zinc-950 text-white border-zinc-800 overflow-hidden relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-primary/30 rounded-full blur-[120px] pointer-events-none" />
 
           <div className="p-12 md:p-20 text-center relative z-10 flex flex-col items-center">
             <h2 className="font-display text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              Pronto para multiplicar <br /> sua produtividade?
+              Pronto para recuperar <br /> suas horas?
             </h2>
             <p className="text-xl text-zinc-400 mb-10 max-w-2xl">
-              Pare de perder tempo com trabalhos que um robô pode fazer melhor.
-              Junte-se a milhares de equipes focadas na execução.
+              Junte-se a mais de 2.000 equipes que pararam de perder tempo com
+              atas, cobranças e follow-ups manuais.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Button
@@ -751,6 +847,7 @@ function CTASection() {
                 className="rounded-full h-14 px-10 bg-white text-black hover:bg-zinc-200 text-lg font-bold shadow-2xl"
               >
                 Começar agora — grátis
+                <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               <Button
                 size="lg"
@@ -761,7 +858,7 @@ function CTASection() {
               </Button>
             </div>
             <p className="mt-6 text-sm text-zinc-500">
-              Não requer cartão de crédito. Setup em 2 minutos.
+              Não requer cartão de crédito. Setup em 2 minutos. Cancele quando quiser.
             </p>
           </div>
         </Card>
@@ -773,31 +870,57 @@ function CTASection() {
 function Footer() {
   return (
     <footer className="py-12 border-t border-border bg-background">
-      <div className="container px-4 md:px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md bg-foreground flex items-center justify-center text-background text-xs font-bold">
-            N
+      <div className="container px-4 md:px-6">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-10">
+          <div className="max-w-xs">
+            <Link href="/" className="flex items-center gap-2 mb-3">
+              <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center text-white text-xs font-bold">
+                N
+              </div>
+              <span className="font-display font-bold tracking-tight text-foreground">
+                Notura
+              </span>
+            </Link>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              A IA que transforma reuniões em ação. Resumos automáticos direto
+              no WhatsApp da sua equipe.
+            </p>
           </div>
-          <span className="font-display font-bold tracking-tight text-foreground">
-            Notura
-          </span>
-        </Link>
-        <p className="text-sm text-muted-foreground">
-          © 2024 Notura. Feito com amor no Brasil.
-        </p>
-        <div className="flex gap-4">
-          <a
-            href="#"
-            className="text-sm text-muted-foreground hover:text-foreground"
-          >
-            Privacidade
-          </a>
-          <a
-            href="#"
-            className="text-sm text-muted-foreground hover:text-foreground"
-          >
-            Termos
-          </a>
+
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 text-sm">
+            <div>
+              <h4 className="font-semibold mb-3">Produto</h4>
+              <ul className="space-y-2 text-muted-foreground">
+                <li><Link href="/" className="hover:text-foreground transition-colors">Homepage</Link></li>
+                <li><a href="#como-funciona" className="hover:text-foreground transition-colors">Como funciona</a></li>
+                <li><a href="#resultados" className="hover:text-foreground transition-colors">Resultados</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3">Empresa</h4>
+              <ul className="space-y-2 text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">Sobre</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Contato</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3">Legal</h4>
+              <ul className="space-y-2 text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">Privacidade</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Termos</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+          <p className="text-sm text-muted-foreground">
+            © 2024 Notura. Feito com amor no Brasil. 🇧🇷
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Todos os direitos reservados.
+          </p>
         </div>
       </div>
     </footer>
