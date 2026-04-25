@@ -2,6 +2,8 @@
 type ModuleMap = Record<string, () => Promise<Record<string, unknown>>>;
 export const modules: ModuleMap = {
   "./components/mockups/notura-productivity/ProductivityBoost.tsx": () => import("../components/mockups/notura-productivity/ProductivityBoost.tsx"),
+  "./components/mockups/notura-v2/Clean.tsx": () => import("../components/mockups/notura-v2/Clean.tsx"),
   "./components/mockups/notura-v2/Elevated.tsx": () => import("../components/mockups/notura-v2/Elevated.tsx"),
-  "./components/mockups/notura-v2/Sharpened.tsx": () => import("../components/mockups/notura-v2/Sharpened.tsx")
+  "./components/mockups/notura-v2/Sharpened.tsx": () => import("../components/mockups/notura-v2/Sharpened.tsx"),
+  "./components/mockups/notura-v2/Social.tsx": () => import("../components/mockups/notura-v2/Social.tsx")
 };
