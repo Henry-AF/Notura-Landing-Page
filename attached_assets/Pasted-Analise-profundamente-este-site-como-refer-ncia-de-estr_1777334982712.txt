@@ -1,0 +1,119 @@
+Analise profundamente este site como referência de estrutura, UX e hierarquia de conteúdo:
+https://nortjobs.com/pt-BR
+
+Objetivo:
+Criar um novo site inspirado nele, mas com identidade própria, mais moderno, com foco em conversão e uso intenso de motion design.
+
+IMPORTANTE:
+- NÃO copie textos ou código diretamente
+- Use apenas como referência de estrutura, seções e fluxo de navegação
+
+STACK:
+- React + Tailwind CSS
+- Framer Motion para animações
+- Código limpo, componentizado e responsivo
+
+---
+
+### 🎯 DIREÇÃO DE DESIGN
+
+Quero um visual:
+- Moderno estilo SaaS
+- Minimalista, porém impactante
+- Forte uso de animações suaves (fade, slide, scale, parallax)
+- Sensação de fluidez e inteligência (quase "AI-powered")
+
+---
+
+### ⚡ HERO SECTION (PRINCIPAL)
+
+Criar uma hero extremamente chamativa com:
+
+- Headline forte e direta
+- Subheadline explicando o valor
+- CTA destacado
+- Elemento animado simulando:
+  → Dados sendo organizados
+  → Ou cards surgindo dinamicamente
+
+Animações:
+- Entrada com fade + slide
+- Elementos aparecendo em sequência
+- Microinterações no hover
+
+---
+
+### 🧩 ESTRUTURA DAS SEÇÕES (baseado no site)
+
+Usar a estrutura do site como referência (jobs, busca, etc.), mas transformar em algo mais moderno:
+
+1. Seção de busca / proposta principal
+   - Input estilizado
+   - Animação ao focar
+   - Resultados aparecendo com motion
+
+2. Seção de benefícios / diferenciais
+   - Cards animados
+   - Hover com elevação (scale + shadow)
+   - Ícones + títulos + descrição curta
+
+3. Seção explicativa (como funciona)
+   - Step-by-step com animação de entrada
+   - Linha progressiva conectando etapas
+
+4. Seção de prova / autoridade
+   - Números grandes (animando contagem)
+   - Depoimentos com carousel animado
+
+5. CTA final
+   - Forte contraste visual
+   - Botão com microinteração
+
+---
+
+### ✨ MOTION (MUITO IMPORTANTE)
+
+Adicionar animações em:
+- Scroll (fade + slide)
+- Hover (scale, glow, depth)
+- Entrada de elementos
+- Transições suaves entre seções
+
+Usar Framer Motion com:
+- Variants reutilizáveis
+- Delay em cascata (stagger)
+- Performance otimizada
+
+---
+
+### 🎯 FOCO EM INFORMAÇÃO
+
+Quero que:
+- As informações MAIS importantes tenham destaque visual claro
+- Uso de:
+  → Tipografia grande
+  → Cores de contraste
+  → Espaçamento inteligente
+- Leitura rápida (escaneável)
+
+---
+
+### 📱 RESPONSIVIDADE
+
+- Mobile-first
+- Layout adaptável
+- Animações leves no mobile
+
+---
+
+### 📦 ENTREGA
+
+- Código completo em React
+- Componentes separados (Hero, Features, Steps, CTA, etc.)
+- Estrutura organizada
+- Pronto para rodar no Replit
+
+---
+
+Se necessário:
+Sugira melhorias no layout original para aumentar conversão e clareza, mantendo a lógica estrutural inspirada no site de referência.

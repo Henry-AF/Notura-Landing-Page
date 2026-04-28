@@ -5,508 +5,705 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Produtividade from "@/pages/produtividade";
-import { motion, useScroll, useTransform, AnimatePresence, useInView } from "framer-motion";
-import { Mic, Square, Check, CheckCheck, Clock, Settings, User, FileText, ArrowRight, Zap, RefreshCw, Smartphone, CheckCircle2, Play, Users } from "lucide-react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useInView,
+  AnimatePresence,
+  useMotionValue,
+  useSpring,
+} from "framer-motion";
+import {
+  Mic,
+  Zap,
+  ArrowRight,
+  CheckCircle2,
+  Sparkles,
+  MessageSquare,
+  FileText,
+  Bot,
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  Clock,
+  TrendingUp,
+  Users,
+  Star,
+  Check,
+  Menu,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 const queryClient = new QueryClient();
 
-// --- Components ---
+// ─── Reusable Variants ───────────────────────────────────────────────────────
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 32 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: i * 0.1 },
+  }),
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    transition: { duration: 0.5, delay: i * 0.08 },
+  }),
+};
+
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+
+// ─── Scroll Reveal Wrapper ────────────────────────────────────────────────────
+
+function Reveal({
+  children,
+  className = "",
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={inView ? "visible" : "hidden"}
+      custom={delay / 0.1}
+      variants={fadeUp}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// ─── Count Up ────────────────────────────────────────────────────────────────
+
+function CountUp({
+  to,
+  from = 0,
+  duration = 2,
+  decimals = 0,
+  prefix = "",
+  suffix = "",
+}: {
+  to: number;
+  from?: number;
+  duration?: number;
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+  const [value, setValue] = useState(from);
+  useEffect(() => {
+    if (!inView) return;
+    let start: number | null = null;
+    let raf: number;
+    const step = (ts: number) => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / (duration * 1000), 1);
+      const ease = 1 - Math.pow(1 - p, 4);
+      setValue(from + (to - from) * ease);
+      if (p < 1) raf = requestAnimationFrame(step);
+      else setValue(to);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, to, from, duration]);
+  return (
+    <span ref={ref}>
+      {prefix}
+      {value.toFixed(decimals)}
+      {suffix}
+    </span>
+  );
+}
+
+// ─── NavBar ───────────────────────────────────────────────────────────────────
 
 function NavBar() {
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 backdrop-blur-md bg-background/70 border-b border-white/10">
-      <div className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-white font-bold">N</div>
-        <span className="font-display font-bold text-xl tracking-tight text-foreground">Notura</span>
-      </div>
-      <div className="hidden md:flex items-center gap-6">
-        <a href="#produto" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Produto</a>
-        <Link href="/produtividade" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Produtividade</Link>
-        <a href="#beneficios" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Benefícios</a>
-        <a href="#como-funciona" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Como funciona</a>
-      </div>
-      <div className="flex items-center gap-4">
-        <a href="#" className="hidden md:block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Entrar</a>
-        <Button className="rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25">Começar grátis</Button>
-      </div>
-    </nav>
-  );
-}
-
-function PhoneMockup() {
-  const [seconds, setSeconds] = useState(0);
-  const [isRecording, setIsRecording] = useState(true);
-
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
-    if (!isRecording) return;
-    const interval = setInterval(() => {
-      setSeconds(s => s + 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isRecording]);
+    const fn = () => setScrolled(window.scrollY > 24);
+    window.addEventListener("scroll", fn);
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
 
-  const formatTime = (totalSeconds: number) => {
-    const mins = Math.floor(totalSeconds / 60);
-    const secs = totalSeconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  const scroll = (id: string) => {
+    setOpen(false);
+    document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const waveBars = Array.from({ length: 40 });
-
   return (
-    <div className="relative mx-auto w-[300px] h-[600px] bg-black rounded-[40px] border-[8px] border-zinc-800 shadow-2xl overflow-hidden ring-1 ring-white/10">
-      {/* Notch */}
-      <div className="absolute top-0 inset-x-0 h-6 flex justify-center z-20">
-        <div className="w-32 h-6 bg-zinc-800 rounded-b-3xl"></div>
-      </div>
+    <motion.nav
+      initial={{ y: -60, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-background/90 backdrop-blur-xl border-b border-border/60 shadow-sm"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-primary/30">
+            N
+          </div>
+          <span className="font-display font-bold text-xl tracking-tight">
+            Notura
+          </span>
+        </Link>
 
-      {/* Screen Content */}
-      <div className="absolute inset-0 bg-zinc-950 flex flex-col pt-12 pb-8 px-4 text-white">
-        <div className="flex-1 flex flex-col items-center justify-center">
-          
-          <motion.div 
-            animate={{ opacity: [1, 0.5, 1] }} 
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 text-red-500 mb-8"
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
+          {[
+            ["Como funciona", "#como-funciona"],
+            ["Benefícios", "#beneficios"],
+            ["Números", "#numeros"],
+          ].map(([label, id]) => (
+            <button
+              key={id}
+              onClick={() => scroll(id)}
+              className="hover:text-foreground transition-colors"
+            >
+              {label}
+            </button>
+          ))}
+          <Link
+            href="/produtividade"
+            className="hover:text-foreground transition-colors"
           >
-            <div className="w-2 h-2 rounded-full bg-red-500" />
-            <span className="text-xs font-medium uppercase tracking-wider">Gravando agora</span>
-          </motion.div>
-
-          <h2 className="text-2xl font-display font-medium text-center mb-2">Gravação em andamento</h2>
-          
-          <div className="text-5xl font-mono font-light text-zinc-400 mb-12 tracking-tight">
-            {formatTime(seconds)}
-          </div>
-
-          <div className="w-full h-32 flex items-center justify-center gap-1 mb-12 relative">
-            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
-            {waveBars.map((_, i) => (
-              <motion.div
-                key={i}
-                animate={{
-                  height: isRecording ? ["10%", `${Math.random() * 80 + 20}%`, "10%"] : "10%"
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 0.5 + Math.random() * 0.5,
-                  delay: Math.random() * 0.2
-                }}
-                className="w-1.5 bg-primary rounded-full relative z-10"
-              />
-            ))}
-          </div>
+            Produtividade
+          </Link>
         </div>
 
-        <div className="flex justify-center pb-6 relative z-10">
-          <button 
-            className="w-20 h-20 rounded-full border-4 border-zinc-800 flex items-center justify-center"
-            onClick={() => setIsRecording(!isRecording)}
+        <div className="hidden md:flex items-center gap-3">
+          <a
+            href="#"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            <div className="w-14 h-14 bg-red-500 rounded-full flex items-center justify-center shadow-lg shadow-red-500/50">
-              <Square className="w-5 h-5 text-white fill-white" />
+            Entrar
+          </a>
+          <Button
+            size="sm"
+            className="rounded-full bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/25 px-5"
+            onClick={() => scroll("#cta")}
+          >
+            Começar grátis
+          </Button>
+        </div>
+
+        <button
+          className="md:hidden p-2 text-muted-foreground"
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-background border-b border-border overflow-hidden"
+          >
+            <div className="container px-4 pb-4 flex flex-col gap-3 text-sm font-medium">
+              {[
+                ["Como funciona", "#como-funciona"],
+                ["Benefícios", "#beneficios"],
+                ["Números", "#numeros"],
+              ].map(([label, id]) => (
+                <button
+                  key={id}
+                  onClick={() => scroll(id)}
+                  className="text-left text-muted-foreground py-2"
+                >
+                  {label}
+                </button>
+              ))}
+              <Link href="/produtividade" className="text-muted-foreground py-2">
+                Produtividade
+              </Link>
+              <Button
+                className="rounded-full bg-primary text-white mt-1"
+                onClick={() => scroll("#cta")}
+              >
+                Começar grátis
+              </Button>
             </div>
-          </button>
-        </div>
-        <p className="text-center text-zinc-500 text-sm">Encerrar gravação</p>
-      </div>
-
-      {/* Glare effect */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 pointer-events-none" />
-    </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
   );
 }
 
-function WhatsAppBubble({ children, delay = 0, isRead = false }: { children: React.ReactNode, delay?: number, isRead?: boolean }) {
+// ─── Hero ─────────────────────────────────────────────────────────────────────
+
+function MeetingCard({
+  delay,
+  title,
+  tasks,
+  x,
+  y,
+  rotate,
+}: {
+  delay: number;
+  title: string;
+  tasks: string[];
+  x: string;
+  y: string;
+  rotate: number;
+}) {
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20, scale: 0.95, originBottom: 1, originRight: 1 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
-      className="ml-auto w-fit max-w-[85%] bg-[#DCF8C6] dark:bg-[#005C4B] text-zinc-900 dark:text-zinc-100 p-3 rounded-2xl rounded-tr-sm shadow-sm relative group"
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8, y: 40 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+      style={{ rotate, left: x, top: y }}
+      className="absolute w-52 bg-background/80 backdrop-blur-xl border border-border/80 rounded-2xl p-4 shadow-2xl"
     >
-      <div className="text-sm leading-relaxed whitespace-pre-wrap">{children}</div>
-      <div className="flex justify-end items-center gap-1 mt-1 opacity-70">
-        <span className="text-[10px]">10:42</span>
-        {isRead ? (
-          <CheckCheck className="w-3.5 h-3.5 text-blue-500 dark:text-[#53BDEB]" />
-        ) : (
-          <Check className="w-3.5 h-3.5" />
-        )}
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center">
+          <Sparkles className="w-3.5 h-3.5 text-primary" />
+        </div>
+        <span className="text-xs font-semibold text-foreground truncate">
+          {title}
+        </span>
+      </div>
+      <div className="space-y-1.5">
+        {tasks.map((t, i) => (
+          <div key={i} className="flex items-start gap-1.5">
+            <Check className="w-3 h-3 text-green-500 mt-0.5 shrink-0" />
+            <span className="text-[11px] text-muted-foreground leading-tight">
+              {t}
+            </span>
+          </div>
+        ))}
       </div>
     </motion.div>
   );
 }
 
 function Hero() {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 120]);
+  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
+
   return (
-    <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden flex flex-col items-center justify-center min-h-[90vh]">
-      {/* Background gradients */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/20 dark:bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-blue-500/20 dark:bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
-      
+    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden pt-16">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-primary/8 rounded-full blur-[140px] pointer-events-none" />
+      <motion.div
+        animate={{ scale: [1, 1.05, 1], opacity: [0.4, 0.6, 0.4] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none"
+      />
+
       <div className="container px-4 md:px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center max-w-6xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex flex-col items-start text-left"
-          >
-            <Badge variant="secondary" className="mb-6 rounded-full px-4 py-1.5 border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-colors">
-              ✨ A revolução das reuniões chegou
-            </Badge>
-            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-[1.1] mb-6">
-              O resumo das reuniões para o WhatsApp em <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">minutos</span>.
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-lg">
-              Grave. A IA organiza. Sua equipe executa. Transforme áudio caótico em insights estruturados e ações claras, direto no grupo da equipe.
-            </p>
-            <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-4">
-              <Button size="lg" className="rounded-full h-14 px-8 bg-foreground text-background hover:bg-foreground/90 shadow-xl dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 text-base font-semibold group">
-                Testar gratuitamente
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button size="lg" variant="outline" className="rounded-full h-14 px-8 text-base font-semibold bg-background/50 backdrop-blur-sm border-border">
-                Ver demonstração
-              </Button>
-            </div>
-            <div className="mt-8 flex items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex -space-x-2">
-                {[1,2,3,4].map(i => (
-                  <div key={i} className={`w-8 h-8 rounded-full border-2 border-background bg-muted flex items-center justify-center overflow-hidden z-[${5-i}]`}>
-                    <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="User" />
-                  </div>
-                ))}
-              </div>
-              <p>Junte-se a +2.000 líderes eficientes</p>
-            </div>
-          </motion.div>
-
+        <motion.div style={{ y, opacity }} className="max-w-4xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, rotateY: -10 }}
-            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            transition={{ duration: 1, delay: 0.2, type: "spring", stiffness: 50 }}
-            className="perspective-[1000px] flex justify-center lg:justify-end"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex mb-8"
           >
-            <PhoneMockup />
+            <Badge
+              variant="outline"
+              className="rounded-full px-5 py-2 border-primary/30 bg-primary/5 text-primary backdrop-blur-sm text-sm font-medium"
+            >
+              <Sparkles className="w-3.5 h-3.5 mr-2" />
+              IA que transforma reuniões em resultado
+            </Badge>
           </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
-function TranscriptionSection() {
-  const words = "Enquanto você fala, o Notura entende. Cada palavra é processada com precisão absoluta pela nossa inteligência artificial avançada. Sem perder o contexto. Sem esquecer detalhes.".split(" ");
-
-  return (
-    <section className="py-24 md:py-32 bg-secondary/30 relative overflow-hidden" id="produto">
-      <div className="container px-4 md:px-6">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-6">
-            Transcreve no ritmo do seu pensamento
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground">
-            A IA não apenas transcreve, mas compreende o jargão da sua empresa e o sotaque da sua equipe.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto items-center">
-          <Card className="p-8 border-border bg-background/50 backdrop-blur-sm shadow-xl min-h-[300px] relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-blue-500 transform origin-left transition-transform duration-1000 group-hover:scale-x-100" />
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <Mic className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <p className="font-semibold text-sm">Gravando áudio...</p>
-                <div className="flex gap-1 items-center">
-                  <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                  <p className="text-xs text-muted-foreground">Ao vivo</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <motion.div 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                variants={{
-                  hidden: { opacity: 0 },
-                  visible: {
-                    opacity: 1,
-                    transition: { staggerChildren: 0.05 }
-                  }
-                }}
-                className="text-xl md:text-2xl font-medium leading-relaxed"
+          <motion.h1
+            initial="hidden"
+            animate="visible"
+            variants={stagger}
+            className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.05] mb-7"
+          >
+            {["Reuniões", "que viram"].map((word, i) => (
+              <motion.span
+                key={i}
+                variants={fadeUp}
+                custom={i}
+                className="inline-block mr-4"
               >
-                {words.map((word, i) => (
-                  <motion.span
-                    key={i}
-                    variants={{
-                      hidden: { opacity: 0, y: 10 },
-                      visible: { opacity: 1, y: 0 }
-                    }}
-                    className={`inline-block mr-1.5 ${['entende.', 'precisão', 'absoluta', 'inteligência', 'artificial'].includes(word) ? 'text-primary' : 'text-foreground/80'}`}
-                  >
-                    {word}
-                  </motion.span>
-                ))}
-                <motion.span 
-                  animate={{ opacity: [1, 0, 1] }} 
-                  transition={{ repeat: Infinity, duration: 0.8 }}
-                  className="inline-block w-3 h-6 bg-primary ml-1 align-middle"
-                />
+                {word}
+              </motion.span>
+            ))}
+            <br />
+            <motion.span
+              variants={fadeUp}
+              custom={2}
+              className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-primary via-violet-500 to-blue-500"
+            >
+              ação.
+            </motion.span>
+          </motion.h1>
+
+          <Reveal delay={0.3}>
+            <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+              Grave sua reunião. Em segundos, a IA gera resumo, tarefas e
+              decisões — e envia direto para o WhatsApp da sua equipe.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.5}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                <Button
+                  size="lg"
+                  className="rounded-full h-14 px-9 bg-primary text-white hover:bg-primary/90 shadow-2xl shadow-primary/30 text-base font-bold group"
+                  onClick={() =>
+                    document
+                      .querySelector("#demo")
+                      ?.scrollIntoView({ behavior: "smooth" })
+                  }
+                >
+                  Começar grátis
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="rounded-full h-14 px-9 text-base font-semibold bg-background/50 backdrop-blur-sm border-border"
+                  onClick={() =>
+                    document
+                      .querySelector("#como-funciona")
+                      ?.scrollIntoView({ behavior: "smooth" })
+                  }
+                >
+                  <Play className="mr-2 w-4 h-4" fill="currentColor" />
+                  Ver demonstração
+                </Button>
               </motion.div>
             </div>
-          </Card>
+          </Reveal>
 
-          <div className="space-y-6">
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                <Zap className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-2">Reconhecimento de jargões</h3>
-                <p className="text-muted-foreground">Aprende os termos específicos da sua indústria automaticamente.</p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
-                <Users className="w-6 h-6 text-blue-500" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-2">Separação de locutores</h3>
-                <p className="text-muted-foreground">Sabe exatamente quem disse o que, mesmo quando falam juntos.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function OrganizeSection() {
-  return (
-    <section className="py-24 md:py-32 relative">
-      <div className="container px-4 md:px-6">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-6">
-            Do caos à clareza estruturada
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground">
-            A IA não faz apenas um resumo. Ela reestrutura a informação em tópicos, decisões e itens de ação.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <Card className="p-6 h-full border-border/50 bg-background hover:border-primary/30 transition-colors shadow-lg hover:shadow-xl hover:-translate-y-1 duration-300">
-              <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center mb-4">
-                <FileText className="w-5 h-5 text-orange-500" />
-              </div>
-              <h3 className="font-bold text-lg mb-4">Tópicos Discutidos</h3>
-              <ul className="space-y-3">
-                <li className="flex gap-2 items-start text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 shrink-0" />
-                  <span className="text-muted-foreground">Lançamento do novo app no Q3</span>
-                </li>
-                <li className="flex gap-2 items-start text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 shrink-0" />
-                  <span className="text-muted-foreground">Orçamento de marketing</span>
-                </li>
-                <li className="flex gap-2 items-start text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 shrink-0" />
-                  <span className="text-muted-foreground">Contratação de dev sênior</span>
-                </li>
-              </ul>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <Card className="p-6 h-full border-border/50 bg-background hover:border-blue-500/30 transition-colors shadow-lg hover:shadow-xl hover:-translate-y-1 duration-300 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent pointer-events-none" />
-              <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4 relative z-10">
-                <Settings className="w-5 h-5 text-blue-500" />
-              </div>
-              <h3 className="font-bold text-lg mb-4 relative z-10">Decisões Tomadas</h3>
-              <ul className="space-y-3 relative z-10">
-                <li className="flex gap-2 items-start text-sm">
-                  <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-                  <span className="text-muted-foreground">Adiar o lançamento em 2 semanas</span>
-                </li>
-                <li className="flex gap-2 items-start text-sm">
-                  <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-                  <span className="text-muted-foreground">Aumentar o budget em 15%</span>
-                </li>
-              </ul>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <Card className="p-6 h-full border-border/50 bg-background hover:border-primary/30 transition-colors shadow-lg hover:shadow-xl hover:-translate-y-1 duration-300 ring-1 ring-primary/20 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-transparent pointer-events-none" />
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <ArrowRight className="w-5 h-5 text-primary" />
-              </div>
-              <h3 className="font-bold text-lg mb-4">Próximos Passos</h3>
-              <ul className="space-y-4">
-                <li className="bg-secondary p-3 rounded-lg text-sm border border-border">
-                  <p className="font-medium text-foreground mb-1">Aprovar orçamento final</p>
-                  <div className="flex justify-between items-center text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><User className="w-3 h-3" /> Carlos</span>
-                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> Sexta</span>
-                  </div>
-                </li>
-                <li className="bg-secondary p-3 rounded-lg text-sm border border-border">
-                  <p className="font-medium text-foreground mb-1">Publicar vaga dev</p>
-                  <div className="flex justify-between items-center text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><User className="w-3 h-3" /> Marina</span>
-                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> Hoje</span>
-                  </div>
-                </li>
-              </ul>
-            </Card>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function WhatsAppSection() {
-  return (
-    <section className="py-24 md:py-32 bg-zinc-950 text-white relative overflow-hidden">
-      {/* Background ambient */}
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[#25D366]/20 to-transparent blur-[100px] pointer-events-none" />
-      
-      <div className="container px-4 md:px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center max-w-6xl mx-auto">
-          <div>
-            <Badge variant="outline" className="mb-6 rounded-full px-4 py-1 border-green-500/30 text-green-400 bg-green-500/10">
-              O Momento Uau
-            </Badge>
-            <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-6 text-white">
-              Direto no bolso da sua equipe.
-            </h2>
-            <p className="text-lg md:text-xl text-zinc-400 mb-8">
-              Ninguém quer abrir mais um app para ler resumos. O Notura empacota o conhecimento e entrega no WhatsApp do grupo, formatado perfeitamente.
-            </p>
-            <ul className="space-y-4 mb-8">
-              {['Formatação nativa maravilhosa', 'Envio automático pós-reunião', 'Acesso instantâneo para todos'].map((text, i) => (
-                <li key={i} className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <Check className="w-4 h-4 text-green-400" />
-                  </div>
-                  <span className="text-zinc-300 font-medium">{text}</span>
-                </li>
+          <Reveal delay={0.65}>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
+              {[
+                "Sem cartão de crédito",
+                "Setup em 5 minutos",
+                "Cancele quando quiser",
+              ].map((item) => (
+                <span key={item} className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-green-500" />
+                  {item}
+                </span>
               ))}
-            </ul>
-            <Button size="lg" className="rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-black font-semibold text-base h-14 px-8">
-              Integrar WhatsApp agora
-            </Button>
-          </div>
-
-          <div className="relative mx-auto w-full max-w-[360px] aspect-[9/19] bg-black/40 rounded-[40px] border-[8px] border-zinc-800 shadow-2xl p-4 overflow-hidden backdrop-blur-xl">
-            {/* WA Header */}
-            <div className="flex items-center gap-3 pb-4 border-b border-zinc-800 mb-4">
-              <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center">
-                <Users className="w-5 h-5 text-zinc-400" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-sm">Equipe de Produto</h4>
-                <p className="text-xs text-zinc-500">Carlos, Marina, Você</p>
-              </div>
             </div>
+          </Reveal>
+        </motion.div>
 
-            {/* Chat Area */}
-            <div className="flex flex-col space-y-4 pt-2">
-              <div className="w-fit max-w-[80%] bg-zinc-800 p-3 rounded-2xl rounded-tl-sm text-sm text-zinc-300">
-                Alguém anotou os combinados de hoje?
-                <div className="text-[10px] text-zinc-500 mt-1">10:40</div>
-              </div>
-
-              <WhatsAppBubble delay={0.5} isRead={true}>
-                <span className="font-bold">📝 Resumo: Sync Semanal</span>{'\n\n'}
-                <span className="font-semibold">🎯 Decisões:</span>{'\n'}
-                • Lançamento adiado para Q3{'\n'}
-                • Budget de marketing +15%{'\n\n'}
-                <span className="font-semibold">✅ Próximos Passos:</span>{'\n'}
-                👉 @Carlos: Aprovar orçamento final (Sex){'\n'}
-                👉 @Marina: Publicar vaga dev (Hoje){'\n\n'}
-                <span className="italic text-xs opacity-70">Gerado por Notura ✨</span>
-              </WhatsAppBubble>
-            </div>
-            
-            {/* WA Input */}
-            <div className="absolute bottom-4 left-4 right-4 h-12 rounded-full bg-zinc-800 flex items-center px-4">
-              <div className="w-full text-sm text-zinc-500">Mensagem...</div>
-              <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shrink-0">
-                <Mic className="w-4 h-4 text-black" />
-              </div>
-            </div>
-          </div>
+        {/* Floating cards */}
+        <div className="hidden lg:block relative h-72 mt-16 max-w-5xl mx-auto">
+          <MeetingCard
+            delay={0.9}
+            title="Sync de Produto"
+            tasks={[
+              "Lançamento adiado 2 semanas",
+              "Carlos: Aprovar budget",
+              "Marina: Publicar vaga",
+            ]}
+            x="5%"
+            y="10%"
+            rotate={-4}
+          />
+          <MeetingCard
+            delay={1.1}
+            title="Reunião com Cliente"
+            tasks={[
+              "Proposta aprovada ✓",
+              "Demo marcada p/ Quarta",
+              "João: Enviar contrato",
+            ]}
+            x="33%"
+            y="0%"
+            rotate={1}
+          />
+          <MeetingCard
+            delay={1.3}
+            title="Planejamento Q3"
+            tasks={[
+              "Meta: R$1M ARR",
+              "Equipe dobra em julho",
+              "Novo produto em set.",
+            ]}
+            x="62%"
+            y="12%"
+            rotate={3}
+          />
+          {/* Connecting arrow animation */}
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ duration: 1.5, delay: 1.5, ease: "easeOut" }}
+            style={{ transformOrigin: "left center" }}
+            className="absolute top-1/2 left-[25%] right-[25%] h-0.5 bg-gradient-to-r from-primary/40 via-primary to-primary/40"
+          />
         </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground"
+      >
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+          className="w-5 h-8 rounded-full border-2 border-current flex items-start justify-center pt-1.5"
+        >
+          <div className="w-1 h-2 bg-current rounded-full" />
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+// ─── Demo / Search Section ────────────────────────────────────────────────────
+
+function DemoSection() {
+  const [focused, setFocused] = useState(false);
+  const [value, setValue] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const placeholder = "Cole o link de uma reunião (Zoom, Meet, Teams)...";
+
+  const handleSubmit = () => {
+    if (!value.trim()) return;
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 3000);
+    setValue("");
+  };
+
+  return (
+    <section id="demo" className="py-24 md:py-32 relative">
+      <div className="container px-4 md:px-6 max-w-4xl mx-auto text-center">
+        <Reveal>
+          <Badge
+            variant="outline"
+            className="mb-6 rounded-full px-4 py-1.5 text-muted-foreground border-border"
+          >
+            Experimente agora
+          </Badge>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <h2 className="font-display text-3xl md:text-5xl font-bold tracking-tight mb-4">
+            Comece com uma reunião
+          </h2>
+        </Reveal>
+        <Reveal delay={0.2}>
+          <p className="text-lg text-muted-foreground mb-12 max-w-xl mx-auto">
+            Cole o link de uma gravação ou faça upload do áudio. A IA cuida do
+            resto em menos de 60 segundos.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.3}>
+          <motion.div
+            animate={
+              focused
+                ? { boxShadow: "0 0 0 4px hsl(var(--primary) / 0.15)" }
+                : { boxShadow: "0 0 0 0px transparent" }
+            }
+            className="relative flex items-center rounded-2xl border border-border bg-background p-2 gap-2 transition-colors"
+          >
+            <div
+              className={`flex items-center gap-3 flex-1 px-4 py-3 ${
+                focused ? "text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              <Mic
+                className={`w-5 h-5 shrink-0 transition-colors ${
+                  focused ? "text-primary" : ""
+                }`}
+              />
+              <input
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                onFocus={() => setFocused(true)}
+                onBlur={() => setFocused(false)}
+                onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                placeholder={placeholder}
+                className="flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
+              />
+            </div>
+            <Button
+              onClick={handleSubmit}
+              className="rounded-xl h-11 px-6 bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/25 shrink-0"
+            >
+              <AnimatePresence mode="wait">
+                {submitted ? (
+                  <motion.span
+                    key="done"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex items-center gap-2"
+                  >
+                    <CheckCircle2 className="w-4 h-4" /> Processando...
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="go"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex items-center gap-2"
+                  >
+                    Analisar <ArrowRight className="w-4 h-4" />
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </Button>
+          </motion.div>
+        </Reveal>
+
+        {/* Quick options */}
+        <Reveal delay={0.4}>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3 text-sm">
+            <span className="text-muted-foreground">Ou conecte direto:</span>
+            {["Google Meet", "Zoom", "Microsoft Teams"].map((app) => (
+              <motion.button
+                key={app}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+                className="px-4 py-1.5 rounded-full border border-border text-muted-foreground hover:border-primary/40 hover:text-primary transition-colors bg-secondary/30"
+              >
+                {app}
+              </motion.button>
+            ))}
+          </div>
+        </Reveal>
       </div>
     </section>
   );
 }
+
+// ─── Benefits ─────────────────────────────────────────────────────────────────
 
 function BenefitsSection() {
   const benefits = [
-    { title: "Nunca mais perca uma ideia", desc: "A memória falha. O Notura lembra de cada palavra dita.", icon: <FileText className="w-6 h-6" /> },
-    { title: "Reuniões mais produtivas", desc: "Foque na conversa, não nas anotações.", icon: <Users className="w-6 h-6" /> },
-    { title: "Menos esforço manual", desc: "Economize horas por semana formatando atas e cobrando pessoas.", icon: <RefreshCw className="w-6 h-6" /> },
-    { title: "Execução mais rápida", desc: "Da reunião para a ação em segundos, sem gargalos.", icon: <Zap className="w-6 h-6" /> }
+    {
+      icon: Mic,
+      color: "text-primary",
+      bg: "bg-primary/10",
+      title: "Grave sem preocupação",
+      desc: "Foco total na conversa. O Notura captura e transcreve cada palavra com precisão, mesmo com sotaques e jargões técnicos.",
+    },
+    {
+      icon: Bot,
+      color: "text-violet-500",
+      bg: "bg-violet-500/10",
+      title: "IA que realmente entende",
+      desc: "Não é apenas transcrição. A IA identifica decisões, tarefas e responsáveis — estruturando o caos em clareza acionável.",
+    },
+    {
+      icon: MessageSquare,
+      color: "text-green-500",
+      bg: "bg-green-500/10",
+      title: "Direto no WhatsApp",
+      desc: "Resumo formatado e enviado automaticamente para o grupo da equipe. Ninguém precisa abrir mais um app.",
+    },
+    {
+      icon: TrendingUp,
+      color: "text-blue-500",
+      bg: "bg-blue-500/10",
+      title: "+8h por semana",
+      desc: "Elimine atas manuais, follow-ups perdidos e reuniões sobre reuniões. Tempo devolvido para o que realmente importa.",
+    },
+    {
+      icon: Zap,
+      color: "text-amber-500",
+      bg: "bg-amber-500/10",
+      title: "Execução 4× mais rápida",
+      desc: "Da reunião à ação em menos de 60 segundos. Tarefas com responsável e prazo, prontas para executar.",
+    },
+    {
+      icon: FileText,
+      color: "text-rose-500",
+      bg: "bg-rose-500/10",
+      title: "Histórico pesquisável",
+      desc: "Toda decisão, toda tarefa, todo contexto. Busque por qualquer reunião passada e encontre exatamente o que foi combinado.",
+    },
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-background" id="beneficios">
+    <section id="beneficios" className="py-24 md:py-32 bg-secondary/20">
       <div className="container px-4 md:px-6">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-6">
-            O fim do trabalho invisível
-          </h2>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {benefits.map((b, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
+          <Reveal>
+            <Badge
+              variant="outline"
+              className="mb-6 rounded-full px-4 py-1.5 border-border text-muted-foreground"
             >
-              <Card className="p-6 h-full hover:-translate-y-1 hover:shadow-lg transition-all duration-300 border-border/50 group">
-                <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all text-muted-foreground duration-300">
-                  {b.icon}
-                </div>
-                <h3 className="font-bold text-lg mb-2">{b.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{b.desc}</p>
-              </Card>
-            </motion.div>
+              Diferenciais
+            </Badge>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <h2 className="font-display text-3xl md:text-5xl font-bold tracking-tight mb-5">
+              O fim do trabalho invisível
+            </h2>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <p className="text-lg text-muted-foreground">
+              Tudo que você fazia manualmente depois das reuniões. Agora
+              acontece automaticamente.
+            </p>
+          </Reveal>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {benefits.map((b, i) => (
+            <Reveal key={i} delay={i * 0.07}>
+              <motion.div
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                className="h-full"
+              >
+                <Card className="p-7 h-full border-border/50 bg-background hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 group cursor-default">
+                  <motion.div
+                    whileHover={{ scale: 1.12 }}
+                    transition={{ duration: 0.2 }}
+                    className={`w-12 h-12 rounded-2xl ${b.bg} flex items-center justify-center mb-5 ${b.color}`}
+                  >
+                    <b.icon className="w-6 h-6" />
+                  </motion.div>
+                  <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">
+                    {b.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {b.desc}
+                  </p>
+                </Card>
+              </motion.div>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -514,73 +711,493 @@ function BenefitsSection() {
   );
 }
 
-function FinalCTA() {
+// ─── How it Works ─────────────────────────────────────────────────────────────
+
+function HowItWorksSection() {
+  const steps = [
+    {
+      number: "01",
+      icon: Mic,
+      title: "Grave a reunião",
+      desc: "Use o app no celular, grave direto pelo navegador ou conecte com Zoom, Meet ou Teams. Sem configuração complicada.",
+      color: "primary",
+    },
+    {
+      number: "02",
+      icon: Bot,
+      title: "IA processa tudo",
+      desc: "Em menos de 60 segundos, a IA transcreve, identifica participantes, extrai decisões e cria tarefas com responsáveis.",
+      color: "violet",
+    },
+    {
+      number: "03",
+      icon: MessageSquare,
+      title: "WhatsApp entrega",
+      desc: "O resumo formatado vai direto para o grupo da equipe. Todos alinhados, sem esforço, sem abrir outro aplicativo.",
+      color: "green",
+    },
+  ];
+
+  const colorMap: Record<string, string> = {
+    primary: "bg-primary/10 text-primary border-primary/20",
+    violet: "bg-violet-500/10 text-violet-500 border-violet-500/20",
+    green: "bg-green-500/10 text-green-500 border-green-500/20",
+  };
+
+  const lineColorMap: Record<string, string> = {
+    primary: "from-primary",
+    violet: "from-violet-500",
+    green: "from-green-500",
+  };
+
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden">
-      <div className="absolute inset-0 bg-primary/5" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-full bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
-      
-      <div className="container px-4 md:px-6 relative z-10 text-center max-w-3xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tight mb-6 text-foreground">
-            Pare de anotar.<br />Comece a executar.
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground mb-10">
-            Deixe o Notura cuidar das suas reuniões para você focar no que importa: liderar sua equipe e construir produtos incríveis.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="rounded-full h-14 px-8 bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl shadow-primary/25 text-base font-semibold">
-              Começar agora — É grátis
-            </Button>
-            <Button size="lg" variant="outline" className="rounded-full h-14 px-8 text-base font-semibold bg-background">
-              Falar com vendas
-            </Button>
+    <section id="como-funciona" className="py-24 md:py-36 relative">
+      <div className="container px-4 md:px-6">
+        <div className="text-center max-w-2xl mx-auto mb-20">
+          <Reveal>
+            <Badge
+              variant="outline"
+              className="mb-6 rounded-full px-4 py-1.5 border-border text-muted-foreground"
+            >
+              Como funciona
+            </Badge>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <h2 className="font-display text-3xl md:text-5xl font-bold tracking-tight mb-5">
+              Do áudio à ação
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-violet-500">
+                em 3 passos.
+              </span>
+            </h2>
+          </Reveal>
+        </div>
+
+        <div className="max-w-5xl mx-auto relative">
+          {/* Desktop connector line */}
+          <div className="hidden md:block absolute top-[3.5rem] left-[16.67%] right-[16.67%] h-0.5 bg-border" />
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
+            style={{ transformOrigin: "left center" }}
+            className="hidden md:block absolute top-[3.5rem] left-[16.67%] right-[16.67%] h-0.5 bg-gradient-to-r from-primary via-violet-500 to-green-500"
+          />
+
+          <div className="grid md:grid-cols-3 gap-10 md:gap-6 relative z-10">
+            {steps.map((step, i) => (
+              <Reveal key={i} delay={i * 0.15}>
+                <div className="flex flex-col items-center text-center md:items-center">
+                  <motion.div
+                    whileInView={{ scale: [0.7, 1.1, 1] }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: i * 0.2 + 0.3 }}
+                    className={`w-16 h-16 rounded-2xl border-2 ${colorMap[step.color]} flex items-center justify-center mb-6 bg-background relative`}
+                  >
+                    <step.icon className="w-7 h-7" />
+                    <div className="absolute -top-3 -right-3 w-7 h-7 rounded-full bg-background border border-border flex items-center justify-center">
+                      <span className="text-[10px] font-bold text-muted-foreground">
+                        {step.number}
+                      </span>
+                    </div>
+                  </motion.div>
+                  <h3 className="font-bold text-xl mb-3">{step.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed text-sm max-w-xs">
+                    {step.desc}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 }
 
+// ─── Numbers Section ──────────────────────────────────────────────────────────
+
+function NumbersSection() {
+  const stats = [
+    { value: 2000, suffix: "+", label: "Equipes ativas", prefix: "" },
+    { value: 73, suffix: "%", label: "Menos tempo em atas", prefix: "−" },
+    { value: 8, suffix: "h", label: "Recuperadas por semana", prefix: "+" },
+    { value: 98, suffix: "%", label: "Decisões registradas", prefix: "" },
+  ];
+
+  return (
+    <section id="numeros" className="py-24 md:py-32 bg-zinc-950 text-white relative overflow-hidden">
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-white/5 rounded-full"
+      />
+      <motion.div
+        animate={{ rotate: -360 }}
+        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-primary/10 rounded-full"
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-violet-500/10 pointer-events-none" />
+
+      <div className="container px-4 md:px-6 relative z-10">
+        <div className="text-center mb-16">
+          <Reveal>
+            <h2 className="font-display text-3xl md:text-5xl font-bold tracking-tight mb-4">
+              Resultados que falam por si
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="text-zinc-400 text-lg max-w-xl mx-auto">
+              Dados reais de equipes que pararam de perder tempo com trabalho
+              invisível.
+            </p>
+          </Reveal>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-20">
+          {stats.map((stat, i) => (
+            <Reveal key={i} delay={i * 0.1}>
+              <motion.div
+                whileHover={{ scale: 1.04 }}
+                className="text-center p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm"
+              >
+                <div className="font-display text-4xl md:text-6xl font-bold text-white mb-2">
+                  <CountUp
+                    to={stat.value}
+                    prefix={stat.prefix}
+                    suffix={stat.suffix}
+                  />
+                </div>
+                <p className="text-zinc-400 text-sm font-medium">{stat.label}</p>
+              </motion.div>
+            </Reveal>
+          ))}
+        </div>
+
+        <TestimonialCarousel />
+      </div>
+    </section>
+  );
+}
+
+// ─── Testimonial Carousel ─────────────────────────────────────────────────────
+
+const testimonials = [
+  {
+    text: "A gente achava que precisava contratar mais pessoas. Descobrimos que só precisávamos organizar o ruído. O Notura devolveu a agilidade que tínhamos quando éramos apenas 5 pessoas.",
+    name: "Carolina Mendes",
+    role: "VP de Operações, TechNova",
+    avatar: "https://i.pravatar.cc/150?img=47",
+  },
+  {
+    text: "Paramos de ter reuniões sobre reuniões. Tudo que é decidido chega direto no WhatsApp do time. A execução ficou 3× mais rápida desde que adotamos o Notura.",
+    name: "Pedro Almeida",
+    role: "CEO, Construtora Almeida",
+    avatar: "https://i.pravatar.cc/150?img=33",
+  },
+  {
+    text: "Eu era o cara que ficava 45 minutos escrevendo ata depois de cada call. Hoje, enquanto a reunião termina, o resumo já está no grupo. Não consigo imaginar trabalhar sem isso.",
+    name: "Bruno Santos",
+    role: "Head de Produto, Fintech X",
+    avatar: "https://i.pravatar.cc/150?img=12",
+  },
+];
+
+function TestimonialCarousel() {
+  const [idx, setIdx] = useState(0);
+  const prev = () => setIdx((i) => (i - 1 + testimonials.length) % testimonials.length);
+  const next = () => setIdx((i) => (i + 1) % testimonials.length);
+
+  useEffect(() => {
+    const t = setInterval(next, 5000);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <div className="max-w-3xl mx-auto">
+      <div className="relative overflow-hidden rounded-3xl bg-white/5 border border-white/10 p-8 md:p-12">
+        <div className="flex gap-1 mb-6">
+          {[1, 2, 3, 4, 5].map((s) => (
+            <Star key={s} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+          ))}
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.blockquote
+            key={idx}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="text-xl md:text-2xl font-medium text-white leading-relaxed mb-8"
+          >
+            "{testimonials[idx].text}"
+          </motion.blockquote>
+        </AnimatePresence>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`author-${idx}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex items-center justify-between"
+          >
+            <div className="flex items-center gap-4">
+              <img
+                src={testimonials[idx].avatar}
+                alt={testimonials[idx].name}
+                className="w-12 h-12 rounded-full border-2 border-white/20"
+              />
+              <div>
+                <p className="font-bold text-white">{testimonials[idx].name}</p>
+                <p className="text-zinc-400 text-sm">{testimonials[idx].role}</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={prev}
+                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/60 transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={next}
+                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/60 transition-colors"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Dots */}
+        <div className="flex gap-2 mt-6">
+          {testimonials.map((_, i) => (
+            <button key={i} onClick={() => setIdx(i)}>
+              <motion.div
+                animate={{ width: i === idx ? 24 : 8 }}
+                className="h-2 rounded-full bg-primary"
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── CTA Section ──────────────────────────────────────────────────────────────
+
+function FinalCTA() {
+  return (
+    <section id="cta" className="py-28 md:py-40 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-violet-500/5" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="container px-4 md:px-6 relative z-10 max-w-4xl mx-auto text-center">
+        <Reveal>
+          <Badge
+            variant="outline"
+            className="mb-8 rounded-full px-5 py-2 border-primary/30 bg-primary/5 text-primary"
+          >
+            Comece hoje
+          </Badge>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
+            Pare de anotar.
+            <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-violet-500 to-blue-500">
+              Comece a executar.
+            </span>
+          </h2>
+        </Reveal>
+
+        <Reveal delay={0.2}>
+          <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
+            Mais de 2.000 equipes já pararam de perder tempo com atas e
+            cobranças. Configure em 5 minutos e veja a diferença na primeira
+            reunião.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.3}>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+              <Button
+                size="lg"
+                className="rounded-full h-16 px-10 bg-primary text-white hover:bg-primary/90 shadow-2xl shadow-primary/30 text-lg font-bold group"
+              >
+                Começar agora — é grátis
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-full h-16 px-10 text-lg font-semibold bg-background/50 backdrop-blur-sm border-border"
+              >
+                Falar com vendas
+              </Button>
+            </motion.div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.45}>
+          <p className="mt-6 text-sm text-muted-foreground">
+            Sem cartão de crédito · Setup em 5 minutos · Cancele quando quiser
+          </p>
+        </Reveal>
+
+        {/* Social proof avatars */}
+        <Reveal delay={0.55}>
+          <div className="mt-10 flex items-center justify-center gap-3">
+            <div className="flex -space-x-2">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div
+                  key={i}
+                  className="w-9 h-9 rounded-full border-2 border-background bg-muted overflow-hidden"
+                >
+                  <img
+                    src={`https://i.pravatar.cc/100?img=${i + 20}`}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+            <p className="text-sm text-muted-foreground font-medium">
+              Junte-se a +2.000 equipes eficientes
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+// ─── Footer ───────────────────────────────────────────────────────────────────
+
 function Footer() {
   return (
-    <footer className="py-12 border-t border-border bg-background">
-      <div className="container px-4 md:px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md bg-foreground flex items-center justify-center text-background text-xs font-bold">N</div>
-          <span className="font-display font-bold tracking-tight text-foreground">Notura</span>
+    <footer className="py-14 border-t border-border bg-background">
+      <div className="container px-4 md:px-6">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-10 mb-10">
+          <div className="max-w-xs">
+            <Link href="/" className="flex items-center gap-2 mb-3">
+              <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center text-white text-xs font-bold">
+                N
+              </div>
+              <span className="font-display font-bold text-lg tracking-tight">
+                Notura
+              </span>
+            </Link>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              A IA que transforma reuniões em ação. Resumos automáticos direto
+              no WhatsApp da sua equipe.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 text-sm">
+            <div>
+              <h4 className="font-semibold mb-3">Produto</h4>
+              <ul className="space-y-2 text-muted-foreground">
+                <li>
+                  <button
+                    onClick={() =>
+                      document
+                        .querySelector("#como-funciona")
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Como funciona
+                  </button>
+                </li>
+                <li>
+                  <Link
+                    href="/produtividade"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Produtividade
+                  </Link>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Preços
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3">Empresa</h4>
+              <ul className="space-y-2 text-muted-foreground">
+                <li>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Sobre
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Contato
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3">Legal</h4>
+              <ul className="space-y-2 text-muted-foreground">
+                <li>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Privacidade
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Termos
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <p className="text-sm text-muted-foreground">© 2024 Notura. Feito com amor no Brasil.</p>
-        <div className="flex gap-4">
-          <a href="#" className="text-sm text-muted-foreground hover:text-foreground">Privacidade</a>
-          <a href="#" className="text-sm text-muted-foreground hover:text-foreground">Termos</a>
+        <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-sm text-muted-foreground">
+          <p>© 2024 Notura. Feito com amor no Brasil. 🇧🇷</p>
+          <p>Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>
   );
 }
 
+// ─── Home ─────────────────────────────────────────────────────────────────────
+
 function Home() {
   return (
-    <div className="min-h-[100dvh] w-full flex flex-col bg-background selection:bg-primary selection:text-white">
+    <div className="min-h-[100dvh] w-full flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground">
       <NavBar />
       <main className="flex-1">
         <Hero />
-        <TranscriptionSection />
-        <OrganizeSection />
-        <WhatsAppSection />
+        <DemoSection />
         <BenefitsSection />
+        <HowItWorksSection />
+        <NumbersSection />
         <FinalCTA />
       </main>
       <Footer />
     </div>
   );
 }
+
+// ─── Router ───────────────────────────────────────────────────────────────────
 
 function Router() {
   return (
@@ -592,7 +1209,7 @@ function Router() {
   );
 }
 
-function App() {
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -604,5 +1221,3 @@ function App() {
     </QueryClientProvider>
   );
 }
-
-export default App;
