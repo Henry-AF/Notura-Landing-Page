@@ -8,6 +8,7 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import {
+  Star,
   Clock,
   Zap,
   CheckCircle2,
@@ -24,10 +25,100 @@ import {
   ArrowRight,
   Menu,
   X,
+  ShieldCheck,
+  BadgeCheck,
+  Building2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+function NoturaLogo({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className={`flex items-center ${compact ? "gap-2.5" : "gap-3"}`}>
+      <div
+        className={`flex items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#5743f6_0%,#6f4cff_100%)] text-white shadow-[0_10px_30px_rgba(91,68,255,0.22)] ${compact ? "h-9 w-9" : "h-11 w-11"}`}
+      >
+        <svg
+          viewBox="0 0 44 44"
+          aria-hidden="true"
+          className={compact ? "h-5 w-5" : "h-6 w-6"}
+          fill="none"
+        >
+          <rect x="0" y="0" width="44" height="44" rx="14" fill="transparent" />
+          <rect x="9" y="22" width="3.2" height="9" rx="1.6" fill="white" fillOpacity="0.92" />
+          <rect x="14.8" y="16" width="3.2" height="15" rx="1.6" fill="white" />
+          <rect x="20.6" y="11" width="3.2" height="20" rx="1.6" fill="white" fillOpacity="0.88" />
+          <rect x="26.4" y="16" width="3.2" height="15" rx="1.6" fill="white" />
+          <rect x="32.2" y="22" width="3.2" height="9" rx="1.6" fill="white" fillOpacity="0.92" />
+        </svg>
+      </div>
+      <span
+        className={`font-display font-bold tracking-tight text-foreground ${compact ? "text-[1.375rem] leading-none" : "text-[1.65rem] leading-none"}`}
+      >
+        Notura
+      </span>
+    </div>
+  );
+}
+
+const socialProofItems = [
+  {
+    quote:
+      "Antes eu passava quase 1 hora revisando gravações. Agora o resumo chega no WhatsApp antes de eu sair da call.",
+    name: "Mariana Costa",
+    role: "Gerente de Produto",
+    company: "Conta Azul",
+  },
+  {
+    quote:
+      "A maior mudança foi operacional: ninguém mais esquece decisão, dono ou prazo depois da reunião.",
+    name: "Lucas Ferreira",
+    role: "Head de Operações",
+    company: "Layer Up",
+  },
+  {
+    quote:
+      "A Notura tirou o trabalho invisível da rotina do time. A reunião termina e a execução já começa.",
+    name: "Fernanda Lima",
+    role: "Diretora Comercial",
+    company: "PipeDash",
+  },
+];
+
+const faqItems = [
+  {
+    question: "Minha reunião fica salva? Quem tem acesso ao áudio?",
+    answer:
+      "A Notura processa o conteúdo com controles de acesso e fluxo orientado a privacidade. O resumo final é entregue no WhatsApp e o acesso operacional fica restrito aos responsáveis autorizados.",
+  },
+  {
+    question: "Funciona com Google Meet, Zoom, Teams e ligações normais?",
+    answer:
+      "Sim. O fluxo foi desenhado para equipes que usam as principais plataformas de reunião do mercado, incluindo Google Meet, Zoom e Microsoft Teams.",
+  },
+  {
+    question: "O resumo é enviado automaticamente ou preciso acionar?",
+    answer:
+      "O envio é automático. A reunião termina, a IA organiza decisões e próximos passos, e o resumo estruturado segue direto para o WhatsApp configurado.",
+  },
+  {
+    question: "Como o WhatsApp recebe o resumo? Precisa instalar algo?",
+    answer:
+      "Não precisa instalar um app extra para ler o resumo. A experiência é centrada em receber a mensagem pronta no WhatsApp, com tarefas e decisões já organizadas.",
+  },
+  {
+    question: "Posso cancelar a qualquer momento?",
+    answer:
+      "Sim. Todos os planos podem ser cancelados quando quiser e o plano pago ainda conta com garantia de 7 dias para reduzir risco na primeira compra.",
+  },
+];
 
 function CountUp({
   to,
@@ -107,14 +198,9 @@ function NavBar() {
           : "bg-transparent"
       }`}
     >
-      <div className="container px-4 md:px-6 mx-auto flex items-center justify-between h-16 md:h-18">
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-sm">
-            N
-          </div>
-          <span className="font-display font-bold text-xl tracking-tight text-foreground">
-            Notura
-          </span>
+      <div className="page-shell flex items-center justify-between h-16 md:h-[4.5rem]">
+        <Link href="/" className="shrink-0">
+          <NoturaLogo compact />
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
@@ -140,7 +226,7 @@ function NavBar() {
             className="rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25 h-9 px-5 text-sm"
             onClick={() => scrollTo("#cta")}
           >
-            Começar grátis
+            Receber meu primeiro resumo grátis
           </Button>
         </div>
 
@@ -160,7 +246,7 @@ function NavBar() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden bg-background border-b border-border overflow-hidden"
           >
-            <div className="container px-4 pb-4 flex flex-col gap-3">
+            <div className="page-shell pb-4 flex flex-col gap-3">
               {navLinks.map((link) => (
                 <button
                   key={link.href}
@@ -174,7 +260,7 @@ function NavBar() {
                 className="rounded-full bg-primary text-white mt-2"
                 onClick={() => scrollTo("#cta")}
               >
-                Começar grátis
+                Receber meu primeiro resumo grátis
               </Button>
             </div>
           </motion.div>
@@ -190,33 +276,43 @@ function HeroSection() {
   const opacity1 = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
-    <section className="relative pt-32 pb-20 md:pt-52 md:pb-36 overflow-hidden flex flex-col items-center justify-center min-h-[92vh]">
+    <section className="relative overflow-hidden flex flex-col items-center justify-center pt-28 pb-18 md:pt-44 md:pb-28 min-h-[calc(100svh-4rem)]">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
 
       <motion.div
         style={{ y: y1, opacity: opacity1 }}
-        className="container px-4 md:px-6 relative z-10 flex flex-col items-center text-center"
+        className="page-shell relative z-10 flex flex-col items-center text-center"
       >
         <Badge
           variant="outline"
           className="mb-8 rounded-full px-4 py-1.5 border-primary/30 text-primary bg-primary/5 backdrop-blur-sm"
         >
           <Sparkles className="w-4 h-4 mr-2" />
-          Produtividade Redefinida
+          Mais de 1.200 reuniões resumidas esta semana
         </Badge>
 
-        <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-foreground leading-[1.1] mb-6 max-w-5xl">
-          Recupere{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-indigo-500 to-blue-500">
-            <CountUp to={8} prefix="+" suffix="h" /> por semana
+        <div className="mb-6 flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/70 px-3 py-1.5 backdrop-blur-sm">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star key={star} className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
+            ))}
+            <span className="font-medium text-foreground">4.9</span>
+            <span>87 avaliações</span>
           </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/70 px-3 py-1.5 backdrop-blur-sm">
+            <BadgeCheck className="h-4 w-4 text-primary" />
+            Resumo enviado em segundos no WhatsApp
+          </span>
+        </div>
+
+        <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-foreground leading-[1.1] mb-6 max-w-5xl">
+          Nunca mais perca o que foi decidido na reunião.
         </h1>
 
         <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl leading-relaxed">
-          A IA que devolve o tempo da sua equipe. Transforme horas de reuniões e
-          anotações manuais em{" "}
-          <strong className="text-foreground">ações claras em minutos</strong>.
+          A Notura escuta sua reunião, identifica as decisões e manda os pontos
+          principais direto no WhatsApp, sem você precisar fazer nada.
         </p>
 
         <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-4">
@@ -228,7 +324,7 @@ function HeroSection() {
               if (el) el.scrollIntoView({ behavior: "smooth" });
             }}
           >
-            Começar grátis
+            Receber meu primeiro resumo grátis
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
           <Button
@@ -244,6 +340,10 @@ function HeroSection() {
             Ver em ação
           </Button>
         </div>
+
+        <p className="mt-4 text-sm text-muted-foreground">
+          Grátis para começar · Sem cartão de crédito · Funciona com Zoom, Google Meet e Teams
+        </p>
 
         <div className="mt-10 flex items-center gap-6 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5">
@@ -309,7 +409,7 @@ function ComparisonSection() {
 
   return (
     <section id="como-funciona" className="py-24 md:py-32 bg-secondary/30 relative overflow-hidden">
-      <div className="container px-4 md:px-6">
+      <div className="page-shell">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <Badge variant="outline" className="mb-6 rounded-full px-4 py-1.5 border-border text-muted-foreground">
             Antes vs. Depois
@@ -428,7 +528,7 @@ function MetricsSection() {
 
   return (
     <section id="resultados" className="py-20 bg-background relative z-10">
-      <div className="container px-4 md:px-6">
+      <div className="page-shell">
         <div className="text-center mb-12">
           <h2 className="text-2xl md:text-3xl font-display font-bold tracking-tight">
             Números que falam por si
@@ -482,7 +582,7 @@ function LoopSection() {
 
   return (
     <section className="py-24 md:py-32 overflow-hidden">
-      <div className="container px-4 md:px-6 text-center">
+      <div className="page-shell text-center">
         <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-4">
           O Fluxo Contínuo de Valor
         </h2>
@@ -544,7 +644,7 @@ function BeforeAfterSection() {
     <section className="py-24 md:py-32 bg-zinc-950 text-white relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-primary/10 pointer-events-none" />
 
-      <div className="container px-4 md:px-6 relative z-10">
+      <div className="page-shell relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-6">
             De ruído a clareza
@@ -612,50 +712,73 @@ function BeforeAfterSection() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute inset-0 p-8 bg-zinc-900/50 flex flex-col justify-center"
+                  className="absolute inset-0 p-5 md:p-8 bg-zinc-900/50 flex flex-col justify-center"
                 >
-                  <div className="space-y-6 max-w-2xl mx-auto w-full">
-                    <div>
-                      <h4 className="text-primary font-bold mb-3 flex items-center gap-2">
-                        <Target className="w-5 h-5" /> Decisões Principais
-                      </h4>
-                      <ul className="space-y-2 text-sm text-zinc-300">
-                        <li className="flex items-center gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-green-500" />{" "}
-                          Foco prioritário no fluxo de onboarding
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-green-500" />{" "}
-                          Nova reunião de alinhamento marcada para Quarta-feira
-                        </li>
-                      </ul>
+                  <div className="grid gap-6 md:grid-cols-[1.05fr_0.95fr] max-w-4xl mx-auto w-full items-start">
+                    <div className="space-y-6">
+                      <div>
+                        <h4 className="text-primary font-bold mb-3 flex items-center gap-2">
+                          <Target className="w-5 h-5" /> Decisões Principais
+                        </h4>
+                        <ul className="space-y-2 text-sm text-zinc-300">
+                          <li className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-green-500" />
+                            Foco prioritário no fluxo de onboarding
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-green-500" />
+                            Nova reunião de alinhamento marcada para quarta-feira
+                          </li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="text-blue-400 font-bold mb-3 flex items-center gap-2">
+                          <Workflow className="w-5 h-5" /> Tarefas enviadas para o WhatsApp
+                        </h4>
+                        <ul className="space-y-3 text-sm">
+                          <li className="bg-zinc-800 p-3 rounded-lg flex justify-between items-center gap-3">
+                            <span>Finalizar documentação do onboarding</span>
+                            <Badge variant="outline" className="text-zinc-400 border-zinc-700">
+                              João • Sex
+                            </Badge>
+                          </li>
+                          <li className="bg-zinc-800 p-3 rounded-lg flex justify-between items-center gap-3">
+                            <span>Revisão final da API de pagamentos</span>
+                            <Badge variant="outline" className="text-zinc-400 border-zinc-700">
+                              Maria
+                            </Badge>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="text-blue-400 font-bold mb-3 flex items-center gap-2">
-                        <Workflow className="w-5 h-5" /> Tarefas (Enviadas p/
-                        WhatsApp)
-                      </h4>
-                      <ul className="space-y-3 text-sm">
-                        <li className="bg-zinc-800 p-3 rounded-lg flex justify-between items-center">
-                          <span>Finalizar documentação do Onboarding</span>
-                          <Badge
-                            variant="outline"
-                            className="text-zinc-400 border-zinc-700"
-                          >
-                            João • Sex
-                          </Badge>
-                        </li>
-                        <li className="bg-zinc-800 p-3 rounded-lg flex justify-between items-center">
-                          <span>Revisão final da API de Pagamentos</span>
-                          <Badge
-                            variant="outline"
-                            className="text-zinc-400 border-zinc-700"
-                          >
-                            Maria
-                          </Badge>
-                        </li>
-                      </ul>
-                    </div>
+                    <Card className="overflow-hidden border-green-900/70 bg-[#0b141a] text-white shadow-2xl">
+                      <div className="flex items-center justify-between border-b border-white/10 bg-[#111b21] px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/20 text-green-400 font-semibold">
+                            N
+                          </div>
+                          <div>
+                            <p className="font-semibold">Notura</p>
+                            <p className="text-xs text-zinc-400">online agora</p>
+                          </div>
+                        </div>
+                        <span className="text-xs text-zinc-400">09:47</span>
+                      </div>
+                      <div className="space-y-3 bg-[linear-gradient(180deg,#0f1c22_0%,#081318_100%)] p-4 text-sm">
+                        <div className="ml-auto max-w-[92%] rounded-2xl rounded-tr-md bg-[#005c4b] px-4 py-3 text-left shadow-lg">
+                          <p className="mb-2 font-semibold">Resumo da reunião de alinhamento</p>
+                          <p>1. Prioridade no onboarding para reduzir drop.</p>
+                          <p>2. Revisão da API de pagamentos segue com Maria.</p>
+                          <p>3. Próxima call marcada para quarta-feira.</p>
+                        </div>
+                        <div className="ml-auto max-w-[92%] rounded-2xl rounded-tr-md bg-[#005c4b] px-4 py-3 text-left shadow-lg">
+                          <p className="mb-2 font-semibold">Próximos passos</p>
+                          <p>• João finaliza o doc até sexta.</p>
+                          <p>• Maria envia revisão final da API.</p>
+                          <p>• Time recebe tarefas no próprio WhatsApp.</p>
+                        </div>
+                      </div>
+                    </Card>
                   </div>
                 </motion.div>
               )}
@@ -670,7 +793,7 @@ function BeforeAfterSection() {
 function CalendarVisualSection() {
   return (
     <section className="py-24 md:py-32 overflow-hidden relative bg-background">
-      <div className="container px-4 md:px-6">
+      <div className="page-shell">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -785,42 +908,275 @@ function TestimonialSection() {
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-black/10 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
 
-      <div className="container px-4 md:px-6 relative z-10">
+      <div className="page-shell relative z-10">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto text-center"
+          className="max-w-6xl mx-auto"
         >
-          <div className="mb-8 flex justify-center">
-            <div className="flex gap-1">
+          <div className="mb-12 text-center">
+            <div className="mb-5 flex justify-center gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
-                <Sparkles
-                  key={star}
-                  className="w-6 h-6 text-yellow-300 fill-yellow-300"
-                />
+                <Star key={star} className="w-6 h-6 fill-yellow-300 text-yellow-300" />
               ))}
             </div>
+            <p className="text-sm uppercase tracking-[0.24em] text-primary-foreground/70">
+              Prova social
+            </p>
+            <h3 className="mt-4 font-display text-3xl md:text-5xl font-medium leading-tight">
+              Times reais usando a Notura para encurtar o caminho entre reunião e execução.
+            </h3>
           </div>
-          <h3 className="font-display text-2xl md:text-4xl lg:text-5xl font-medium leading-tight mb-10">
-            "A gente achava que precisava contratar mais pessoas. Descobrimos
-            que só precisávamos organizar o ruído. O Notura devolveu a
-            agilidade que tínhamos quando éramos apenas 5 pessoas."
-          </h3>
-          <div className="flex flex-col items-center justify-center gap-4">
-            <img
-              src="https://i.pravatar.cc/150?img=47"
-              alt="Carolina Mendes"
-              className="w-16 h-16 rounded-full border-4 border-white/20"
-            />
-            <div>
-              <p className="font-bold text-lg">Carolina Mendes</p>
-              <p className="text-primary-foreground/70">
-                VP de Operações, TechNova
-              </p>
-            </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {socialProofItems.map((item) => (
+              <Card key={item.name} className="border-white/15 bg-white/10 p-6 text-left text-white shadow-xl backdrop-blur-sm">
+                <div className="mb-5 flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star key={star} className="h-4 w-4 fill-yellow-300 text-yellow-300" />
+                  ))}
+                </div>
+                <p className="mb-6 text-base leading-7 text-white/90">"{item.quote}"</p>
+                <div className="border-t border-white/10 pt-4">
+                  <p className="font-semibold">{item.name}</p>
+                  <p className="text-sm text-white/70">{item.role}, {item.company}</p>
+                </div>
+              </Card>
+            ))}
           </div>
         </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function PricingSection() {
+  const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
+
+  const plans = [
+    {
+      name: "Free",
+      monthly: "R$ 0",
+      yearly: "R$ 0",
+      description: "Para testar o fluxo completo antes de subir o time inteiro.",
+      features: [
+        "3 reuniões grátis",
+        "Envio para o WhatsApp",
+        "Suporte por e-mail",
+        "Controle de tarefas pelo app",
+        "Sem chatbot com IA",
+      ],
+      cta: "Começar grátis",
+      featured: false,
+      accent: "default",
+      periodLabel: "/mês",
+    },
+    {
+      name: "Starter",
+      monthly: "R$ 49",
+      yearly: "R$ 39",
+      description: "Para validar o fluxo da primeira reunião ao resumo no WhatsApp.",
+      features: ["30 resumos por mês", "Envio automático para WhatsApp", "Suporte por email"],
+      cta: "Ativar minha conta grátis",
+      featured: false,
+      accent: "default",
+      periodLabel: "/mês",
+    },
+    {
+      name: "Pro",
+      monthly: "R$ 99",
+      yearly: "R$ 69",
+      description: "Plano recomendado para times que querem transformar reunião em execução real.",
+      features: [
+        "Resumos ilimitados",
+        "Suporte por WhatsApp",
+        "Controle de tarefas pelo app",
+        "Com chatbot de IA",
+      ],
+      cta: "Quero meu resumo no WhatsApp",
+      featured: true,
+      accent: "primary",
+      periodLabel: "/mês",
+    },
+    {
+      name: "Enterprise",
+      monthly: "Consultar",
+      yearly: "Consultar",
+      description: "Para operações maiores com mais governança e acompanhamento próximo.",
+      features: [
+        "Usuários ilimitados",
+        "Onboarding assistido",
+        "Prioridade no suporte",
+        "Integrações personalizadas",
+      ],
+      cta: "Falar com vendas",
+      featured: false,
+      accent: "enterprise",
+      periodLabel: "",
+    },
+  ];
+
+  return (
+    <section id="precos" className="py-24 md:py-32 bg-secondary/30">
+      <div className="page-shell">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
+          <Badge variant="outline" className="mb-6 rounded-full px-4 py-1.5">
+            Pricing e garantia
+          </Badge>
+          <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-6">
+            Vale a pena pagar quando o retorno chega já na próxima reunião.
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Escolha o ritmo do time e reduza risco com uma garantia clara desde a primeira compra.
+          </p>
+        </div>
+
+        <div className="mb-10 flex justify-center">
+          <div className="inline-flex rounded-full border border-border bg-background p-1 shadow-sm">
+            <button
+              onClick={() => setBilling("monthly")}
+              className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${billing === "monthly" ? "bg-primary text-white" : "text-muted-foreground"}`}
+            >
+              Mensal
+            </button>
+            <button
+              onClick={() => setBilling("yearly")}
+              className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${billing === "yearly" ? "bg-primary text-white" : "text-muted-foreground"}`}
+            >
+              Anual — economize 30%
+            </button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {plans.map((plan) => (
+            <Card
+              key={plan.name}
+              className={`relative flex h-full flex-col rounded-3xl p-6 shadow-sm ${
+                plan.featured
+                  ? "border-primary shadow-primary/10 ring-1 ring-primary/20 bg-background"
+                  : plan.accent === "enterprise"
+                    ? "border-cyan-400/60 bg-[linear-gradient(180deg,rgba(236,254,255,0.9)_0%,rgba(248,250,252,0.98)_100%)] shadow-[0_18px_50px_rgba(34,211,238,0.14)] ring-1 ring-cyan-400/30"
+                    : "border-border/70 bg-background/80"
+              }`}
+            >
+              {(plan.featured || plan.accent === "enterprise") && (
+                <Badge className={`mb-5 w-fit rounded-full ${plan.featured ? "bg-primary text-white" : "bg-cyan-500 text-white"}`}>
+                  {plan.featured ? "Mais popular" : "Atendimento consultivo"}
+                </Badge>
+              )}
+              <div className="mb-5">
+                <h3 className="text-2xl font-display font-bold">{plan.name}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{plan.description}</p>
+              </div>
+              <div className="mb-6">
+                <span className="text-4xl font-display font-bold tracking-tight">
+                  {billing === "monthly" ? plan.monthly : plan.yearly}
+                </span>
+                {plan.periodLabel ? (
+                  <span className="ml-2 text-sm text-muted-foreground">{plan.periodLabel}</span>
+                ) : null}
+              </div>
+              <ul className="mb-8 space-y-3 text-sm text-muted-foreground">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex items-center gap-2">
+                    <CheckCircle2 className={`h-4 w-4 ${plan.accent === "enterprise" ? "text-cyan-500" : "text-primary"}`} />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Button
+                className={`mt-auto w-full rounded-full ${plan.accent === "enterprise" ? "border-cyan-300 text-cyan-700 bg-cyan-50" : ""}`}
+                variant={plan.featured ? "default" : "outline"}
+              >
+                {plan.cta}
+              </Button>
+              <p className="mt-4 text-xs text-muted-foreground">
+                {plan.periodLabel
+                  ? `Cobrado ${billing === "monthly" ? "mensalmente" : "anualmente"} · Cancele quando quiser · Suporte direto no WhatsApp`
+                  : "Escopo personalizado · Integração assistida · Condições sob consulta"}
+              </p>
+            </Card>
+          ))}
+        </div>
+
+        <Card className="mx-auto mt-8 max-w-4xl rounded-3xl border-primary/20 bg-primary/5 p-6 md:p-7">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="mt-1 h-5 w-5 text-primary" />
+              <div>
+                <p className="font-semibold text-foreground">Garantia de 7 dias.</p>
+                <p className="text-sm text-muted-foreground">
+                  Se não gostar, devolvemos 100% do valor pago, sem perguntas e sem burocracia.
+                </p>
+              </div>
+            </div>
+            <Badge variant="outline" className="w-fit rounded-full px-3 py-1">
+              Risco baixo para testar
+            </Badge>
+          </div>
+        </Card>
+      </div>
+    </section>
+  );
+}
+
+function FAQSection() {
+  return (
+    <section id="faq" className="py-24 md:py-28 bg-background">
+      <div className="page-shell">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
+          <Badge variant="outline" className="mb-6 rounded-full px-4 py-1.5">
+            FAQ e objeções
+          </Badge>
+          <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-6">
+            As dúvidas que mais travam a decisão de compra.
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Clareza sobre privacidade, compatibilidade e operação reduz atrito antes do cadastro.
+          </p>
+        </div>
+
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+          <Card className="rounded-3xl border-border/70 p-6 md:p-8">
+            <Accordion type="single" collapsible className="w-full">
+              {faqItems.map((item, index) => (
+                <AccordionItem key={item.question} value={`item-${index}`}>
+                  <AccordionTrigger className="text-base font-semibold hover:no-underline">
+                    {item.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-sm leading-7 text-muted-foreground">
+                    {item.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </Card>
+
+          <Card className="rounded-3xl border-border/70 p-6 md:p-8 bg-secondary/30">
+            <Badge className="mb-5 rounded-full bg-green-500 text-white">Atendimento humano</Badge>
+            <h3 className="text-2xl font-display font-bold tracking-tight mb-4">
+              Ainda tem dúvidas? Fale com a gente no WhatsApp.
+            </h3>
+            <p className="mb-6 text-sm leading-7 text-muted-foreground">
+              Capture visitantes quase prontos para converter com um canal direto, rápido e familiar.
+            </p>
+            <Button asChild className="w-full rounded-full bg-primary text-white">
+              <a href="#cta">
+                Falar no WhatsApp
+              </a>
+            </Button>
+            <div className="mt-6 space-y-3 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-primary" /> Resposta rápida para objeções comerciais
+              </p>
+              <p className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-primary" /> Suporte para ativação inicial do time
+              </p>
+            </div>
+          </Card>
+        </div>
       </div>
     </section>
   );
@@ -829,24 +1185,23 @@ function TestimonialSection() {
 function CTASection() {
   return (
     <section id="cta" className="py-32 relative">
-      <div className="container px-4 md:px-6">
+      <div className="page-shell">
         <Card className="max-w-5xl mx-auto bg-zinc-950 text-white border-zinc-800 overflow-hidden relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-primary/30 rounded-full blur-[120px] pointer-events-none" />
 
           <div className="p-12 md:p-20 text-center relative z-10 flex flex-col items-center">
             <h2 className="font-display text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              Pronto para recuperar <br /> suas horas?
+              Sua próxima reunião merece um resumo. Comece hoje.
             </h2>
             <p className="text-xl text-zinc-400 mb-10 max-w-2xl">
-              Junte-se a mais de 2.000 equipes que pararam de perder tempo com
-              atas, cobranças e follow-ups manuais.
+              Junte-se a equipes que querem sair da reunião com decisões registradas, tarefas distribuídas e menos trabalho invisível.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Button
                 size="lg"
                 className="rounded-full h-14 px-10 bg-white text-black hover:bg-zinc-200 text-lg font-bold shadow-2xl"
               >
-                Começar agora — grátis
+                Quero meu resumo no WhatsApp
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               <Button
@@ -857,8 +1212,11 @@ function CTASection() {
                 Falar com vendas
               </Button>
             </div>
-            <p className="mt-6 text-sm text-zinc-500">
-              Não requer cartão de crédito. Setup em 2 minutos. Cancele quando quiser.
+            <p className="mt-6 text-sm text-zinc-400">
+              Vagas com preço de lançamento disponíveis por tempo limitado.
+            </p>
+            <p className="mt-2 text-sm text-zinc-500">
+              Não requer cartão de crédito · Setup em 2 minutos · Cancele quando quiser.
             </p>
           </div>
         </Card>
@@ -870,21 +1228,20 @@ function CTASection() {
 function Footer() {
   return (
     <footer className="py-12 border-t border-border bg-background">
-      <div className="container px-4 md:px-6">
+      <div className="page-shell">
         <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-10">
           <div className="max-w-xs">
-            <Link href="/" className="flex items-center gap-2 mb-3">
-              <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center text-white text-xs font-bold">
-                N
-              </div>
-              <span className="font-display font-bold tracking-tight text-foreground">
-                Notura
-              </span>
+            <Link href="/" className="mb-4 inline-flex">
+              <NoturaLogo />
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               A IA que transforma reuniões em ação. Resumos automáticos direto
               no WhatsApp da sua equipe.
             </p>
+            <div className="mt-5 space-y-2 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2"><Building2 className="h-4 w-4 text-primary" /> Operação SaaS com foco em produtividade</p>
+              <p className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-primary" /> Fluxo orientado a privacidade e LGPD</p>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 text-sm">
@@ -894,21 +1251,23 @@ function Footer() {
                 <li><Link href="/" className="hover:text-foreground transition-colors">Homepage</Link></li>
                 <li><a href="#como-funciona" className="hover:text-foreground transition-colors">Como funciona</a></li>
                 <li><a href="#resultados" className="hover:text-foreground transition-colors">Resultados</a></li>
+                <li><a href="#precos" className="hover:text-foreground transition-colors">Preços</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-3">Empresa</h4>
               <ul className="space-y-2 text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Sobre</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Contato</a></li>
+                <li><a href="#depoimento" className="hover:text-foreground transition-colors">Clientes</a></li>
+                <li><a href="#faq" className="hover:text-foreground transition-colors">FAQ</a></li>
+                <li><a href="#cta" className="hover:text-foreground transition-colors">Falar com vendas</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-3">Legal</h4>
               <ul className="space-y-2 text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Privacidade</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Termos</a></li>
+                <li><a href="#faq" className="hover:text-foreground transition-colors">Privacidade e LGPD</a></li>
+                <li><a href="#precos" className="hover:text-foreground transition-colors">Garantia de 7 dias</a></li>
+                <li><a href="#cta" className="hover:text-foreground transition-colors">Contato comercial</a></li>
               </ul>
             </div>
           </div>
@@ -916,10 +1275,10 @@ function Footer() {
 
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-sm text-muted-foreground">
-            © 2024 Notura. Feito com amor no Brasil. 🇧🇷
+            © 2026 Notura. Produto em operação no Brasil.
           </p>
           <p className="text-sm text-muted-foreground">
-            Todos os direitos reservados.
+            Suporte comercial e onboarding direto no WhatsApp.
           </p>
         </div>
       </div>
@@ -939,6 +1298,8 @@ export default function Produtividade() {
         <BeforeAfterSection />
         <CalendarVisualSection />
         <TestimonialSection />
+        <PricingSection />
+        <FAQSection />
         <CTASection />
       </main>
       <Footer />
