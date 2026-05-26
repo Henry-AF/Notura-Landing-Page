@@ -33,6 +33,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import appScreenshot from "@assets/image_1779834240530.png";
+import modePresencialImg from "@assets/ChatGPT_Image_26_de_mai._de_2026,_19_31_34_1779838606799.png";
+import modeRemotaImg from "@assets/ChatGPT_Image_26_de_mai._de_2026,_19_32_09_1779838606762.png";
+import modeUploadImg from "@assets/ChatGPT_Image_26_de_mai._de_2026,_19_31_37_1779838606798.png";
 import {
   Accordion,
   AccordionContent,
@@ -1304,12 +1307,344 @@ function Footer() {
   );
 }
 
+const recordingModes = [
+  {
+    id: "presencial",
+    label: "Presencial",
+    icon: Mic,
+    image: modePresencialImg,
+    color: "#6B4EFF",
+    softColor: "#EEEBFF",
+    title: "Reunião Presencial",
+    description:
+      "Use o microfone do seu celular para capturar a conversa diretamente na sala — sem precisar de equipamento adicional.",
+    accent: "Captura via microfone",
+  },
+  {
+    id: "remota",
+    label: "Remota",
+    icon: Workflow,
+    image: modeRemotaImg,
+    color: "#22C55E",
+    softColor: "#DCFCE7",
+    title: "Reunião Remota",
+    description:
+      "Conecte-se ao Zoom, Google Meet ou Teams e a Notura grava e transcreve a reunião automaticamente.",
+    accent: "Integração com Zoom · Meet · Teams",
+  },
+  {
+    id: "upload",
+    label: "Upload",
+    icon: FileText,
+    image: modeUploadImg,
+    color: "#F59E0B",
+    softColor: "#FEF3C7",
+    title: "Upload de Arquivo",
+    description:
+      "Já tem o áudio ou vídeo da reunião? Envie e em minutos receba o resumo estruturado direto no WhatsApp.",
+    accent: "Suporta MP3, WAV, M4A e MP4",
+  },
+];
+
+function ModeShowcaseSection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    if (isHovering) return;
+    const t = setInterval(() => {
+      setActiveIndex((i) => (i + 1) % recordingModes.length);
+    }, 3800);
+    return () => clearInterval(t);
+  }, [isHovering]);
+
+  const active = recordingModes[activeIndex];
+
+  return (
+    <section
+      id="modos"
+      className="py-24 md:py-32 relative overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(180deg, #faf9ff 0%, #f3f1ff 50%, #faf9ff 100%)",
+      }}
+    >
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-all duration-1000"
+        style={{
+          width: 800,
+          height: 600,
+          background: `radial-gradient(ellipse at center, ${active.color}22 0%, transparent 70%)`,
+          filter: "blur(40px)",
+        }}
+      />
+
+      <div className="page-shell relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-14 max-w-3xl mx-auto"
+        >
+          <span
+            className="inline-flex items-center gap-2 rounded-full border bg-white px-4 py-1.5 text-xs font-semibold uppercase tracking-widest mb-5 transition-colors duration-500"
+            style={{ borderColor: `${active.color}40`, color: active.color }}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            Como funciona na prática
+          </span>
+          <h2
+            className="font-display text-4xl md:text-5xl lg:text-6xl mb-5"
+            style={{ fontWeight: 900, color: "#0A0A0A", letterSpacing: "-0.02em" }}
+          >
+            Três formas de gravar.{" "}
+            <span style={{ color: active.color, transition: "color 600ms" }}>
+              Um resumo no WhatsApp.
+            </span>
+          </h2>
+          <p className="text-lg md:text-xl text-gray-500 leading-relaxed">
+            Escolha o modo que combina com sua reunião — a Notura cuida do resto.
+          </p>
+        </motion.div>
+
+        <div
+          className="grid lg:grid-cols-[1fr_auto_1fr] gap-10 lg:gap-16 items-center max-w-6xl mx-auto"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
+          <div className="order-2 lg:order-1 space-y-3">
+            {recordingModes.map((mode, i) => {
+              const Icon = mode.icon;
+              const isActive = i === activeIndex;
+              return (
+                <motion.button
+                  key={mode.id}
+                  onClick={() => setActiveIndex(i)}
+                  whileHover={{ x: 4 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="relative w-full text-left rounded-2xl p-5 border transition-all duration-500 overflow-hidden"
+                  style={{
+                    background: isActive ? mode.softColor : "#ffffff",
+                    borderColor: isActive ? `${mode.color}55` : "#ececec",
+                    boxShadow: isActive
+                      ? `0 16px 40px -12px ${mode.color}55`
+                      : "0 2px 8px rgba(0,0,0,0.04)",
+                  }}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="active-mode-glow"
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background: `radial-gradient(circle at 0% 50%, ${mode.color}25 0%, transparent 60%)`,
+                      }}
+                    />
+                  )}
+                  <div className="relative flex items-center gap-4">
+                    <motion.div
+                      animate={{
+                        scale: isActive ? 1.05 : 1,
+                        rotate: isActive ? [0, -8, 8, 0] : 0,
+                      }}
+                      transition={{ duration: 0.6 }}
+                      className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0 transition-colors duration-500"
+                      style={{
+                        background: isActive ? mode.color : "#f4f4f6",
+                        color: isActive ? "#ffffff" : "#9ca3af",
+                      }}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </motion.div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span
+                          className="font-display font-bold text-base transition-colors duration-500"
+                          style={{ color: isActive ? mode.color : "#0A0A0A" }}
+                        >
+                          {mode.label}
+                        </span>
+                        {isActive && (
+                          <motion.span
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                            style={{
+                              background: mode.color,
+                              color: "#ffffff",
+                            }}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                            Ativo
+                          </motion.span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-500 leading-snug">{mode.accent}</p>
+                    </div>
+                  </div>
+
+                  {isActive && (
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ duration: 3.8, ease: "linear" }}
+                      key={`progress-${activeIndex}-${isHovering}`}
+                      className="absolute bottom-0 left-0 h-[3px] origin-left"
+                      style={{ background: mode.color, width: "100%" }}
+                    />
+                  )}
+                </motion.button>
+              );
+            })}
+
+            <motion.div
+              key={`desc-${activeIndex}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="pt-4"
+            >
+              <h3
+                className="font-display font-bold text-2xl mb-2 transition-colors"
+                style={{ color: active.color }}
+              >
+                {active.title}
+              </h3>
+              <p className="text-base text-gray-600 leading-relaxed">
+                {active.description}
+              </p>
+            </motion.div>
+          </div>
+
+          <div className="order-1 lg:order-2 relative flex justify-center items-center min-h-[560px] py-6">
+            <motion.div
+              className="absolute inset-0 rounded-[60px] pointer-events-none"
+              animate={{
+                boxShadow: `0 40px 120px -20px ${active.color}66`,
+                background: `radial-gradient(circle at center, ${active.color}10 0%, transparent 65%)`,
+              }}
+              transition={{ duration: 0.8 }}
+            />
+
+            <div className="relative" style={{ width: 280 }}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={active.id}
+                  initial={{ opacity: 0, scale: 0.92, y: 20, rotateY: -15 }}
+                  animate={{ opacity: 1, scale: 1, y: 0, rotateY: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -20, rotateY: 15 }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  className="relative"
+                  style={{ perspective: 1200 }}
+                >
+                  <img
+                    src={active.image}
+                    alt={`Tela do app Notura no modo ${active.label}`}
+                    className="w-full h-auto block rounded-[44px]"
+                    style={{
+                      filter: `drop-shadow(0 30px 60px ${active.color}40)`,
+                    }}
+                  />
+                </motion.div>
+              </AnimatePresence>
+
+              <AnimatePresence>
+                <motion.div
+                  key={`tap-${active.id}`}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: [0, 0.6, 0], scale: [0.5, 1.6, 2.2] }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1.2, ease: "easeOut" }}
+                  className="absolute pointer-events-none rounded-full"
+                  style={{
+                    width: 80,
+                    height: 80,
+                    bottom: "44%",
+                    left: `${20 + activeIndex * 30}%`,
+                    background: `radial-gradient(circle, ${active.color}55 0%, transparent 70%)`,
+                  }}
+                />
+              </AnimatePresence>
+
+              <motion.div
+                key={`chip-${active.id}`}
+                initial={{ opacity: 0, x: 20, y: 10 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="absolute -right-4 lg:-right-12 top-1/3 z-20 flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white shadow-[0_12px_32px_rgba(0,0,0,0.12)] border"
+                style={{ borderColor: `${active.color}30` }}
+              >
+                <motion.span
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="w-2 h-2 rounded-full"
+                  style={{ background: active.color }}
+                />
+                <span className="text-xs font-semibold text-[#0A0A0A]">
+                  Modo {active.label} ativo
+                </span>
+              </motion.div>
+            </div>
+          </div>
+
+          <div className="order-3 space-y-4">
+            {[
+              {
+                step: "01",
+                title: "Escolha o modo",
+                desc: "Selecione como você quer capturar sua reunião.",
+              },
+              {
+                step: "02",
+                title: "A IA escuta",
+                desc: "Transcrição e análise em tempo real, sem você fazer nada.",
+              },
+              {
+                step: "03",
+                title: "Resumo no WhatsApp",
+                desc: "Decisões, tarefas e responsáveis chegam organizados em segundos.",
+              },
+            ].map((s, i) => (
+              <motion.div
+                key={s.step}
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.12 }}
+                className="flex gap-4 p-4 rounded-2xl bg-white/60 backdrop-blur-sm border border-white"
+              >
+                <div
+                  className="flex items-center justify-center w-10 h-10 shrink-0 rounded-xl font-display font-bold text-sm transition-colors duration-700"
+                  style={{
+                    background: active.softColor,
+                    color: active.color,
+                  }}
+                >
+                  {s.step}
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-[#0A0A0A] mb-1">
+                    {s.title}
+                  </h4>
+                  <p className="text-sm text-gray-500 leading-snug">{s.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Produtividade() {
   return (
     <div className="min-h-[100dvh] w-full flex flex-col bg-background text-foreground selection:bg-primary/30">
       <NavBar />
       <main className="flex-1">
         <HeroSection />
+        <ModeShowcaseSection />
         <ComparisonSection />
         <MetricsSection />
         <LoopSection />
