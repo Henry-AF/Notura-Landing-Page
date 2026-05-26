@@ -1,0 +1,42 @@
+Redesign the hero section of the landing page to match the style of a modern SaaS product homepage (similar to TaskGo/Asana-style landing pages), using a light purple/lavender gradient background with a floating cloud or soft gradient blob effect.
+
+The new hero should have:
+
+**Layout & Structure:**
+- Centered layout with a top announcement badge (pill-shaped, subtle border) saying something like "Mais de 1.200 reuniões resumidas esta semana"
+- Large, bold headline (black, heavy weight, ~60-72px) — keep the current headline copy
+- Subtitle paragraph below it — keep current copy
+- Two CTA buttons side by side: primary (purple filled) "Receber meu primeiro resumo grátis" + secondary (white outlined) "Ver em ação"
+- Below the buttons: a floating product UI mockup/screenshot card showing the meeting summary result
+
+**The floating UI card (product preview) should display:**
+A realistic-looking Notura app summary card with:
+- Header: meeting title "Alinhamento Estratégico Five" + date "17 de abr. de 2026" + "Concluído" badge (green)
+- Section "Resumo Inteligente" with bullet points:
+  - Decisões: Elano assume papel de gestor de marketing; empresa adota metodologia BANT; propostas automatizadas em até 1h
+  - Tarefas: *Elano* — Criar cronograma semanal; *Gabriel* — Automatizar contratos via IA
+- A green "Copiar para WhatsApp" button
+- Right sidebar with: "DECISÃO CHAVE" card and "PONTO DE ALERTA" card
+- Style: white background card, soft shadow, rounded corners (16px), purple accents
+
+**Floating social proof chips** positioned around the card (like role labels floating):
+- "✅ Resumo gerado · Há 2 minutos" (top left of card)
+- "🎯 5 tarefas criadas · Enviadas p/ WhatsApp" (bottom right of card)
+
+**Background:**
+- Very light lavender (#f0f0ff to #e8e8ff) gradient
+- Soft white cloud/blob shapes or radial gradient glow in the center behind the card
+- No harsh edges — everything feels airy and soft
+
+**Typography:**
+- Headline: font-weight 900, black color
+- Use Google Font "Plus Jakarta Sans" or "Sora" for the whole page
+
+**Color palette:**
+- Primary: #6B4EFF (purple)
+- Background: #F5F4FF
+- Card: #FFFFFF
+- Text: #0A0A0A
+- Badge/accent: #22C55E (green for "Concluído")
+
+Keep all existing functionality and routing. Only redesign the hero section visually.

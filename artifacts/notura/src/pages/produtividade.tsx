@@ -270,55 +270,200 @@ function NavBar() {
   );
 }
 
+function ProductPreviewCard() {
+  return (
+    <div className="relative w-full max-w-3xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 bg-white rounded-[20px] shadow-[0_24px_80px_rgba(107,78,255,0.18),0_4px_24px_rgba(0,0,0,0.08)] border border-[#e8e6ff] overflow-hidden"
+      >
+        <div className="flex">
+          <div className="flex-1 p-6">
+            <div className="flex items-start justify-between mb-5">
+              <div>
+                <h3 className="font-display font-bold text-[#0A0A0A] text-lg leading-tight">
+                  Alinhamento Estratégico Five
+                </h3>
+                <p className="text-sm text-gray-400 mt-1 flex items-center gap-2">
+                  <CalendarIcon className="w-3.5 h-3.5" />
+                  17 de abr. de 2026
+                </p>
+              </div>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#dcfce7] text-[#16a34a] text-xs font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] inline-block" />
+                Concluído
+              </span>
+            </div>
+
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-sm font-bold text-[#0A0A0A] flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#6B4EFF]" />
+                  Resumo Inteligente
+                </p>
+                <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#22C55E] text-white text-xs font-semibold hover:bg-[#16a34a] transition-colors">
+                  <MessageSquare className="w-3 h-3" />
+                  Copiar para WhatsApp
+                </button>
+              </div>
+
+              <div className="space-y-3 text-sm text-[#374151]">
+                <div>
+                  <p className="font-semibold text-[#0A0A0A] mb-1.5">Decisões tomadas:</p>
+                  <ul className="space-y-1 pl-1">
+                    <li className="flex gap-2"><span className="text-[#6B4EFF] mt-0.5 shrink-0">•</span>Elano assume papel de gestor de marketing</li>
+                    <li className="flex gap-2"><span className="text-[#6B4EFF] mt-0.5 shrink-0">•</span>Empresa adota metodologia BANT para qualificar leads</li>
+                    <li className="flex gap-2"><span className="text-[#6B4EFF] mt-0.5 shrink-0">•</span>Propostas automatizadas enviadas em até 1h após a reunião</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-semibold text-[#0A0A0A] mb-1.5">Tarefas:</p>
+                  <ul className="space-y-1 pl-1">
+                    <li className="flex gap-2"><span className="text-[#6B4EFF] mt-0.5 shrink-0">•</span><span><span className="font-semibold text-[#6B4EFF]">Elano</span> — Criar cronograma semanal de postagens</span></li>
+                    <li className="flex gap-2"><span className="text-[#6B4EFF] mt-0.5 shrink-0">•</span><span><span className="font-semibold text-[#6B4EFF]">Gabriel</span> — Automatizar contratos via IA</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-56 shrink-0 border-l border-[#f0eeff] p-4 space-y-3 hidden md:block bg-[#faf9ff]">
+            <div className="rounded-xl border border-[#e8e6ff] bg-white p-3">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#6B4EFF] mb-2 flex items-center gap-1.5">
+                <Target className="w-3 h-3" />
+                Decisão Chave
+              </p>
+              <p className="text-xs text-[#0A0A0A] leading-relaxed font-medium">
+                Elano foi definido como o gestor responsável pela equipe de marketing e cobranças.
+              </p>
+            </div>
+            <div className="rounded-xl border border-[#fde8e8] bg-white p-3">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#ef4444] mb-2 flex items-center gap-1.5">
+                <Zap className="w-3 h-3" />
+                Ponto de Alerta
+              </p>
+              <p className="text-xs text-[#0A0A0A] leading-relaxed font-medium">
+                Alinhamento de prioridades e disponibilidade do membro Elael.
+              </p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.9 }}
+        className="absolute -top-4 -left-4 z-20 flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-[#e8e6ff] shadow-[0_8px_24px_rgba(107,78,255,0.12)]"
+      >
+        <span className="text-base">✅</span>
+        <div className="text-left">
+          <p className="text-xs font-semibold text-[#0A0A0A]">Resumo gerado</p>
+          <p className="text-[11px] text-gray-400">Há 2 minutos</p>
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 1.1 }}
+        className="absolute -bottom-4 -right-4 z-20 flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-[#e8e6ff] shadow-[0_8px_24px_rgba(107,78,255,0.12)]"
+      >
+        <span className="text-base">🎯</span>
+        <div className="text-left">
+          <p className="text-xs font-semibold text-[#0A0A0A]">5 tarefas criadas</p>
+          <p className="text-[11px] text-gray-400">Enviadas p/ WhatsApp</p>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 function HeroSection() {
   const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 500], [0, 150]);
-  const opacity1 = useTransform(scrollY, [0, 300], [1, 0]);
+  const y1 = useTransform(scrollY, [0, 500], [0, 100]);
+  const opacity1 = useTransform(scrollY, [0, 400], [1, 0]);
 
   return (
-    <section className="relative overflow-hidden flex flex-col items-center justify-center pt-28 pb-18 md:pt-44 md:pb-28 min-h-[calc(100svh-4rem)]">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
+    <section
+      className="relative overflow-hidden flex flex-col items-center justify-center pt-28 pb-24 md:pt-40 md:pb-32"
+      style={{ background: "linear-gradient(160deg, #f5f4ff 0%, #eeecff 50%, #f0f4ff 100%)" }}
+    >
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        style={{
+          width: 900,
+          height: 600,
+          background: "radial-gradient(ellipse at center, rgba(107,78,255,0.13) 0%, rgba(107,78,255,0.04) 55%, transparent 75%)",
+          filter: "blur(40px)",
+        }}
+      />
+      <div
+        className="absolute top-0 right-0 pointer-events-none"
+        style={{
+          width: 500,
+          height: 500,
+          background: "radial-gradient(circle, rgba(139,92,246,0.10) 0%, transparent 70%)",
+          filter: "blur(60px)",
+        }}
+      />
+      <div
+        className="absolute bottom-0 left-0 pointer-events-none"
+        style={{
+          width: 400,
+          height: 400,
+          background: "radial-gradient(circle, rgba(99,102,241,0.09) 0%, transparent 70%)",
+          filter: "blur(60px)",
+        }}
+      />
 
       <motion.div
         style={{ y: y1, opacity: opacity1 }}
         className="page-shell relative z-10 flex flex-col items-center text-center"
       >
-        <Badge
-          variant="outline"
-          className="mb-8 rounded-full px-4 py-1.5 border-primary/30 text-primary bg-primary/5 backdrop-blur-sm"
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <Sparkles className="w-4 h-4 mr-2" />
-          Mais de 1.200 reuniões resumidas esta semana
-        </Badge>
-
-        <div className="mb-6 flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/70 px-3 py-1.5 backdrop-blur-sm">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star key={star} className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-            ))}
-            <span className="font-medium text-foreground">4.9</span>
-            <span>87 avaliações</span>
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#6B4EFF]/25 bg-white/70 backdrop-blur-sm px-4 py-2 text-sm font-medium text-[#6B4EFF] shadow-sm mb-8">
+            <Sparkles className="w-4 h-4" />
+            Mais de 1.200 reuniões resumidas esta semana
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/70 px-3 py-1.5 backdrop-blur-sm">
-            <BadgeCheck className="h-4 w-4 text-primary" />
-            Resumo enviado em segundos no WhatsApp
-          </span>
-        </div>
+        </motion.div>
 
-        <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-foreground leading-[1.1] mb-6 max-w-5xl">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.1 }}
+          className="font-display text-5xl md:text-[4.25rem] lg:text-[5rem] leading-[1.05] mb-6 max-w-4xl"
+          style={{ fontWeight: 900, color: "#0A0A0A", letterSpacing: "-0.02em" }}
+        >
           Nunca mais perca o que foi decidido na reunião.
-        </h1>
+        </motion.h1>
 
-        <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl leading-relaxed">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.18 }}
+          className="text-xl md:text-2xl text-gray-500 mb-10 max-w-2xl leading-relaxed"
+        >
           A Notura escuta sua reunião, identifica as decisões e manda os pontos
           principais direto no WhatsApp, sem você precisar fazer nada.
-        </p>
+        </motion.p>
 
-        <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.26 }}
+          className="flex flex-col sm:flex-row w-full sm:w-auto gap-4 mb-4"
+        >
           <Button
             size="lg"
-            className="rounded-full h-14 px-8 bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/25 text-base font-semibold group"
+            className="rounded-full h-14 px-8 text-base font-semibold group text-white"
+            style={{ background: "#6B4EFF", boxShadow: "0 8px 32px rgba(107,78,255,0.35)" }}
             onClick={() => {
               const el = document.querySelector("#cta");
               if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -329,8 +474,7 @@ function HeroSection() {
           </Button>
           <Button
             size="lg"
-            variant="outline"
-            className="rounded-full h-14 px-8 text-base font-semibold bg-background/50 backdrop-blur-sm border-border"
+            className="rounded-full h-14 px-8 text-base font-semibold bg-white border border-[#6B4EFF]/30 text-[#6B4EFF] hover:bg-[#f5f4ff] hover:border-[#6B4EFF]/50 transition-colors"
             onClick={() => {
               const el = document.querySelector("#como-funciona");
               if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -339,53 +483,21 @@ function HeroSection() {
             <Play className="mr-2 w-4 h-4" fill="currentColor" />
             Ver em ação
           </Button>
-        </div>
+        </motion.div>
 
-        <p className="mt-4 text-sm text-muted-foreground">
-          Grátis para começar · Sem cartão de crédito · Funciona com Zoom, Google Meet e Teams
-        </p>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.34 }}
+          className="text-sm text-gray-400 mb-14 flex flex-wrap justify-center gap-x-4 gap-y-1"
+        >
+          <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-[#22C55E]" />Grátis para começar</span>
+          <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-[#22C55E]" />Sem cartão de crédito</span>
+          <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-[#22C55E]" />Funciona com Zoom, Meet e Teams</span>
+        </motion.p>
 
-        <div className="mt-10 flex items-center gap-6 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
-            Sem cartão de crédito
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
-            Setup em 5 minutos
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
-            Cancele quando quiser
-          </span>
-        </div>
-      </motion.div>
-
-      <motion.div
-        animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 left-1/4 hidden lg:flex items-center gap-3 p-4 rounded-2xl bg-background/60 backdrop-blur-xl border border-border shadow-2xl"
-      >
-        <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
-          <CheckCircle2 className="w-5 h-5 text-green-500" />
-        </div>
-        <div className="text-left">
-          <p className="text-sm font-semibold">Resumo gerado</p>
-          <p className="text-xs text-muted-foreground">Há 2 minutos</p>
-        </div>
-      </motion.div>
-
-      <motion.div
-        animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-1/4 right-1/4 hidden lg:flex items-center gap-3 p-4 rounded-2xl bg-background/60 backdrop-blur-xl border border-border shadow-2xl"
-      >
-        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-          <Target className="w-5 h-5 text-primary" />
-        </div>
-        <div className="text-left">
-          <p className="text-sm font-semibold">5 tarefas criadas</p>
-          <p className="text-xs text-muted-foreground">Enviadas p/ WhatsApp</p>
+        <div className="w-full max-w-3xl px-6 md:px-0">
+          <ProductPreviewCard />
         </div>
       </motion.div>
     </section>
