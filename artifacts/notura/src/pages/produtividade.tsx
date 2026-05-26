@@ -335,10 +335,6 @@ function ProductPreviewCard() {
 }
 
 function HeroSection() {
-  const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 500], [0, 100]);
-  const opacity1 = useTransform(scrollY, [0, 400], [1, 0]);
-
   return (
     <section
       className="relative overflow-hidden flex flex-col items-center justify-center pt-28 pb-24 md:pt-40 md:pb-32"
@@ -373,7 +369,6 @@ function HeroSection() {
       />
 
       <motion.div
-        style={{ y: y1, opacity: opacity1 }}
         className="page-shell relative z-10 flex flex-col items-center text-center"
       >
         <motion.div
