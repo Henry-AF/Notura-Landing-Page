@@ -423,17 +423,6 @@ function HeroSection() {
             Receber meu primeiro resumo grátis
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
-          <Button
-            size="lg"
-            className="rounded-full h-14 px-8 text-base font-semibold bg-white border border-[#6B4EFF]/30 text-[#6B4EFF] hover:bg-[#f5f4ff] hover:border-[#6B4EFF]/50 transition-colors"
-            onClick={() => {
-              const el = document.querySelector("#como-funciona");
-              if (el) el.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
-            <Play className="mr-2 w-4 h-4" fill="currentColor" />
-            Ver em ação
-          </Button>
         </motion.div>
 
         <motion.p
@@ -447,9 +436,6 @@ function HeroSection() {
           <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-[#22C55E]" />Funciona com Zoom, Meet e Teams</span>
         </motion.p>
 
-        <div className="w-full max-w-5xl px-4 md:px-0">
-          <ProductPreviewCard />
-        </div>
       </motion.div>
     </section>
   );
