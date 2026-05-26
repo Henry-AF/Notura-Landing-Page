@@ -43,6 +43,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+const LOGIN_URL = "https://notura-app.vercel.app/login";
+
 function NoturaLogo({ compact = false }: { compact?: boolean }) {
   return (
     <div className={`flex items-center ${compact ? "gap-2.5" : "gap-3"}`}>
@@ -220,17 +222,21 @@ function NavBar() {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            href="/"
+          <a
+            href={LOGIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             Entrar
-          </Link>
+          </a>
           <Button
+            asChild
             className="rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25 h-9 px-5 text-sm"
-            onClick={() => scrollTo("#cta")}
           >
-            Receber meu primeiro resumo grátis
+            <a href={LOGIN_URL} target="_blank" rel="noopener noreferrer">
+              Receber meu primeiro resumo grátis
+            </a>
           </Button>
         </div>
 
@@ -260,11 +266,10 @@ function NavBar() {
                   {link.label}
                 </button>
               ))}
-              <Button
-                className="rounded-full bg-primary text-white mt-2"
-                onClick={() => scrollTo("#cta")}
-              >
-                Receber meu primeiro resumo grátis
+              <Button asChild className="rounded-full bg-primary text-white mt-2">
+                <a href={LOGIN_URL} target="_blank" rel="noopener noreferrer">
+                  Receber meu primeiro resumo grátis
+                </a>
               </Button>
             </div>
           </motion.div>
@@ -412,16 +417,15 @@ function HeroSection() {
           className="flex flex-col sm:flex-row w-full sm:w-auto gap-4 mb-4"
         >
           <Button
+            asChild
             size="lg"
             className="rounded-full h-14 px-8 text-base font-semibold group text-white"
             style={{ background: "#6B4EFF", boxShadow: "0 8px 32px rgba(107,78,255,0.35)" }}
-            onClick={() => {
-              const el = document.querySelector("#cta");
-              if (el) el.scrollIntoView({ behavior: "smooth" });
-            }}
           >
-            Receber meu primeiro resumo grátis
-            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <a href={LOGIN_URL} target="_blank" rel="noopener noreferrer">
+              Receber meu primeiro resumo grátis
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </a>
           </Button>
         </motion.div>
 
@@ -1136,10 +1140,13 @@ function PricingSection() {
                 ))}
               </ul>
               <Button
+                asChild
                 className={`mt-auto w-full rounded-full ${plan.accent === "enterprise" ? "border-cyan-300 text-cyan-700 bg-cyan-50" : ""}`}
                 variant={plan.featured ? "default" : "outline"}
               >
-                {plan.cta}
+                <a href={LOGIN_URL} target="_blank" rel="noopener noreferrer">
+                  {plan.cta}
+                </a>
               </Button>
               <p className="mt-4 text-xs text-muted-foreground">
                 {plan.periodLabel
@@ -1212,8 +1219,8 @@ function FAQSection() {
               Capture visitantes quase prontos para converter com um canal direto, rápido e familiar.
             </p>
             <Button asChild className="w-full rounded-full bg-primary text-white">
-              <a href="#cta">
-                Falar no WhatsApp
+              <a href={LOGIN_URL} target="_blank" rel="noopener noreferrer">
+                Começar agora
               </a>
             </Button>
             <div className="mt-6 space-y-3 text-sm text-muted-foreground">
@@ -1266,7 +1273,7 @@ function Footer() {
               <ul className="space-y-2 text-muted-foreground">
                 <li><a href="#depoimento" className="hover:text-foreground transition-colors">Clientes</a></li>
                 <li><a href="#faq" className="hover:text-foreground transition-colors">FAQ</a></li>
-                <li><a href="#cta" className="hover:text-foreground transition-colors">Falar com vendas</a></li>
+                <li><a href={LOGIN_URL} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Acessar app</a></li>
               </ul>
             </div>
             <div>
@@ -1274,7 +1281,7 @@ function Footer() {
               <ul className="space-y-2 text-muted-foreground">
                 <li><a href="#faq" className="hover:text-foreground transition-colors">Privacidade e LGPD</a></li>
                 <li><a href="#precos" className="hover:text-foreground transition-colors">Garantia de 7 dias</a></li>
-                <li><a href="#cta" className="hover:text-foreground transition-colors">Contato comercial</a></li>
+                <li><a href={LOGIN_URL} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Contato comercial</a></li>
               </ul>
             </div>
           </div>
