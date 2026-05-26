@@ -1294,48 +1294,6 @@ function FAQSection() {
   );
 }
 
-function CTASection() {
-  return (
-    <section id="cta" className="py-32 relative">
-      <div className="page-shell">
-        <Card className="max-w-5xl mx-auto bg-zinc-950 text-white border-zinc-800 overflow-hidden relative">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-primary/30 rounded-full blur-[120px] pointer-events-none" />
-
-          <div className="p-12 md:p-20 text-center relative z-10 flex flex-col items-center">
-            <h2 className="font-display text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              Sua próxima reunião merece um resumo. Comece hoje.
-            </h2>
-            <p className="text-xl text-zinc-400 mb-10 max-w-2xl">
-              Junte-se a equipes que querem sair da reunião com decisões registradas, tarefas distribuídas e menos trabalho invisível.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Button
-                size="lg"
-                className="rounded-full h-14 px-10 bg-white text-black hover:bg-zinc-200 text-lg font-bold shadow-2xl"
-              >
-                Quero meu resumo no WhatsApp
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="rounded-full h-14 px-10 border-zinc-700 text-white hover:bg-zinc-800 text-lg font-medium bg-transparent"
-              >
-                Falar com vendas
-              </Button>
-            </div>
-            <p className="mt-6 text-sm text-zinc-400">
-              Vagas com preço de lançamento disponíveis por tempo limitado.
-            </p>
-            <p className="mt-2 text-sm text-zinc-500">
-              Não requer cartão de crédito · Setup em 2 minutos · Cancele quando quiser.
-            </p>
-          </div>
-        </Card>
-      </div>
-    </section>
-  );
-}
 
 function Footer() {
   return (
@@ -1412,7 +1370,6 @@ export default function Produtividade() {
         <TestimonialSection />
         <PricingSection />
         <FAQSection />
-        <CTASection />
       </main>
       <Footer />
     </div>
