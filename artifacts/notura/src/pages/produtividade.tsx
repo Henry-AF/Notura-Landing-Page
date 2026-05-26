@@ -1022,17 +1022,13 @@ function TestimonialSection() {
 
       <div className="page-shell relative z-10">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
           className="max-w-6xl mx-auto"
         >
           <div className="mb-12 text-center">
-            <div className="mb-5 flex justify-center gap-1">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star key={star} className="w-6 h-6 fill-yellow-300 text-yellow-300" />
-              ))}
-            </div>
             <p className="text-sm uppercase tracking-[0.24em] text-primary-foreground/70">
               Prova social
             </p>
@@ -1042,19 +1038,23 @@ function TestimonialSection() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
-            {socialProofItems.map((item) => (
-              <Card key={item.name} className="border-white/15 bg-white/10 p-6 text-left text-white shadow-xl backdrop-blur-sm">
-                <div className="mb-5 flex gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} className="h-4 w-4 fill-yellow-300 text-yellow-300" />
-                  ))}
+            {socialProofItems.map((item, i) => (
+              <motion.div
+                key={item.name}
+                initial={{ opacity: 0, y: 32 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -6, boxShadow: "0 24px 48px rgba(0,0,0,0.18)" }}
+                className="bg-white rounded-2xl p-6 text-left shadow-lg flex flex-col"
+                style={{ cursor: "default" }}
+              >
+                <p className="mb-6 text-base leading-7 text-[#1a1a2e] flex-1">"{item.quote}"</p>
+                <div className="border-t border-gray-100 pt-4">
+                  <p className="font-semibold text-[#0A0A0A]">{item.name}</p>
+                  <p className="text-sm text-gray-400">{item.role}, {item.company}</p>
                 </div>
-                <p className="mb-6 text-base leading-7 text-white/90">"{item.quote}"</p>
-                <div className="border-t border-white/10 pt-4">
-                  <p className="font-semibold">{item.name}</p>
-                  <p className="text-sm text-white/70">{item.role}, {item.company}</p>
-                </div>
-              </Card>
+              </motion.div>
             ))}
           </div>
         </motion.div>
