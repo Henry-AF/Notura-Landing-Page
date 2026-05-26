@@ -32,6 +32,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import appScreenshot from "@assets/image_1779834240530.png";
 import {
   Accordion,
   AccordionContent,
@@ -272,91 +273,43 @@ function NavBar() {
 
 function ProductPreviewCard() {
   return (
-    <div className="relative w-full max-w-3xl mx-auto">
+    <div className="relative w-full max-w-5xl mx-auto">
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 bg-white rounded-[20px] shadow-[0_24px_80px_rgba(107,78,255,0.18),0_4px_24px_rgba(0,0,0,0.08)] border border-[#e8e6ff] overflow-hidden"
+        initial={{ opacity: 0, y: 60, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 rounded-[14px] bg-[#1a1a2e] shadow-[0_40px_100px_-20px_rgba(107,78,255,0.45),0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-[#2a2a3e] overflow-hidden"
       >
-        <div className="flex">
-          <div className="flex-1 p-6">
-            <div className="flex items-start justify-between mb-5">
-              <div>
-                <h3 className="font-display font-bold text-[#0A0A0A] text-lg leading-tight">
-                  Alinhamento Estratégico Five
-                </h3>
-                <p className="text-sm text-gray-400 mt-1 flex items-center gap-2">
-                  <CalendarIcon className="w-3.5 h-3.5" />
-                  17 de abr. de 2026
-                </p>
-              </div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#dcfce7] text-[#16a34a] text-xs font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] inline-block" />
-                Concluído
-              </span>
-            </div>
-
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-sm font-bold text-[#0A0A0A] flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#6B4EFF]" />
-                  Resumo Inteligente
-                </p>
-                <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#22C55E] text-white text-xs font-semibold hover:bg-[#16a34a] transition-colors">
-                  <MessageSquare className="w-3 h-3" />
-                  Copiar para WhatsApp
-                </button>
-              </div>
-
-              <div className="space-y-3 text-sm text-[#374151]">
-                <div>
-                  <p className="font-semibold text-[#0A0A0A] mb-1.5">Decisões tomadas:</p>
-                  <ul className="space-y-1 pl-1">
-                    <li className="flex gap-2"><span className="text-[#6B4EFF] mt-0.5 shrink-0">•</span>Elano assume papel de gestor de marketing</li>
-                    <li className="flex gap-2"><span className="text-[#6B4EFF] mt-0.5 shrink-0">•</span>Empresa adota metodologia BANT para qualificar leads</li>
-                    <li className="flex gap-2"><span className="text-[#6B4EFF] mt-0.5 shrink-0">•</span>Propostas automatizadas enviadas em até 1h após a reunião</li>
-                  </ul>
-                </div>
-                <div>
-                  <p className="font-semibold text-[#0A0A0A] mb-1.5">Tarefas:</p>
-                  <ul className="space-y-1 pl-1">
-                    <li className="flex gap-2"><span className="text-[#6B4EFF] mt-0.5 shrink-0">•</span><span><span className="font-semibold text-[#6B4EFF]">Elano</span> — Criar cronograma semanal de postagens</span></li>
-                    <li className="flex gap-2"><span className="text-[#6B4EFF] mt-0.5 shrink-0">•</span><span><span className="font-semibold text-[#6B4EFF]">Gabriel</span> — Automatizar contratos via IA</span></li>
-                  </ul>
-                </div>
-              </div>
+        <div className="flex items-center gap-2 px-4 py-3 bg-[#1a1a2e] border-b border-[#2a2a3e]">
+          <div className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+            <span className="w-3 h-3 rounded-full bg-[#febc2e]" />
+            <span className="w-3 h-3 rounded-full bg-[#28c840]" />
+          </div>
+          <div className="flex-1 flex justify-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1 rounded-md bg-[#2a2a3e] text-[11px] text-gray-300 max-w-md w-full justify-center">
+              <span className="text-[#28c840]">●</span>
+              <span className="font-mono">app.notura.com.br/reunioes/alinhamento-five</span>
             </div>
           </div>
+          <div className="w-[68px]" />
+        </div>
 
-          <div className="w-56 shrink-0 border-l border-[#f0eeff] p-4 space-y-3 hidden md:block bg-[#faf9ff]">
-            <div className="rounded-xl border border-[#e8e6ff] bg-white p-3">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#6B4EFF] mb-2 flex items-center gap-1.5">
-                <Target className="w-3 h-3" />
-                Decisão Chave
-              </p>
-              <p className="text-xs text-[#0A0A0A] leading-relaxed font-medium">
-                Elano foi definido como o gestor responsável pela equipe de marketing e cobranças.
-              </p>
-            </div>
-            <div className="rounded-xl border border-[#fde8e8] bg-white p-3">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#ef4444] mb-2 flex items-center gap-1.5">
-                <Zap className="w-3 h-3" />
-                Ponto de Alerta
-              </p>
-              <p className="text-xs text-[#0A0A0A] leading-relaxed font-medium">
-                Alinhamento de prioridades e disponibilidade do membro Elael.
-              </p>
-            </div>
-          </div>
+        <div className="bg-white">
+          <img
+            src={appScreenshot}
+            alt="Tela do app Notura mostrando o resumo de uma reunião"
+            className="w-full h-auto block"
+            loading="eager"
+          />
         </div>
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.9 }}
-        className="absolute -top-4 -left-4 z-20 flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-[#e8e6ff] shadow-[0_8px_24px_rgba(107,78,255,0.12)]"
+        initial={{ opacity: 0, x: -20, y: -10 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
+        transition={{ duration: 0.5, delay: 1.0 }}
+        className="absolute -top-5 -left-3 md:-left-8 z-20 flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-[#e8e6ff] shadow-[0_12px_32px_rgba(107,78,255,0.18)]"
       >
         <span className="text-base">✅</span>
         <div className="text-left">
@@ -366,10 +319,10 @@ function ProductPreviewCard() {
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 1.1 }}
-        className="absolute -bottom-4 -right-4 z-20 flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-[#e8e6ff] shadow-[0_8px_24px_rgba(107,78,255,0.12)]"
+        initial={{ opacity: 0, x: 20, y: 10 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
+        transition={{ duration: 0.5, delay: 1.2 }}
+        className="absolute -bottom-5 -right-3 md:-right-8 z-20 flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-[#e8e6ff] shadow-[0_12px_32px_rgba(107,78,255,0.18)]"
       >
         <span className="text-base">🎯</span>
         <div className="text-left">
@@ -496,7 +449,7 @@ function HeroSection() {
           <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-[#22C55E]" />Funciona com Zoom, Meet e Teams</span>
         </motion.p>
 
-        <div className="w-full max-w-3xl px-6 md:px-0">
+        <div className="w-full max-w-5xl px-4 md:px-0">
           <ProductPreviewCard />
         </div>
       </motion.div>
