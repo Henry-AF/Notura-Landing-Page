@@ -843,118 +843,6 @@ function BeforeAfterSection() {
   );
 }
 
-function CalendarVisualSection() {
-  return (
-    <section className="py-24 md:py-32 overflow-hidden relative bg-background">
-      <div className="page-shell">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="max-w-xl"
-          >
-            <Badge className="mb-6 bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 border-none rounded-full px-4 py-1.5">
-              Gestão de Tempo
-            </Badge>
-            <h2 className="text-3xl md:text-5xl font-display font-bold tracking-tight mb-6">
-              Sua agenda, finalmente respirando.
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8">
-              Quando você elimina o tempo gasto organizando informações e
-              cobrando tarefas, blocos inteiros da sua agenda são liberados
-              para o que realmente importa: pensar, criar e liderar.
-            </p>
-            <ul className="space-y-4">
-              <li className="flex items-center gap-3 font-medium">
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <span className="opacity-70 line-through">
-                  Reuniões para alinhar a última reunião
-                </span>
-              </li>
-              <li className="flex items-center gap-3 font-medium">
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <span className="opacity-70 line-through">
-                  1 hora escrevendo ata
-                </span>
-              </li>
-              <li className="flex items-center gap-3 font-medium">
-                <div className="w-2 h-2 rounded-full bg-blue-500" />
-                <span>Trabalho profundo sem interrupções</span>
-              </li>
-              <li className="flex items-center gap-3 font-medium">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                <span>Tempo livre para estratégia</span>
-              </li>
-            </ul>
-          </motion.div>
-
-          <div className="relative">
-            <Card className="p-4 md:p-6 bg-secondary/50 border-border/50 shadow-2xl rounded-2xl overflow-hidden backdrop-blur-sm">
-              <div className="flex gap-4 mb-4 items-center">
-                <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-400" />
-                  <div className="w-3 h-3 rounded-full bg-amber-400" />
-                  <div className="w-3 h-3 rounded-full bg-green-400" />
-                </div>
-                <div className="text-sm font-medium opacity-50 flex items-center gap-2">
-                  <CalendarIcon className="w-4 h-4" /> Semana Atual
-                </div>
-              </div>
-
-              <div className="grid grid-cols-5 gap-2 h-[300px]">
-                {[...Array(5)].map((_, colIndex) => (
-                  <div key={colIndex} className="flex flex-col gap-2 relative">
-                    <div className="text-center text-xs font-medium text-muted-foreground mb-2">
-                      {["Seg", "Ter", "Qua", "Qui", "Sex"][colIndex]}
-                    </div>
-                    <motion.div
-                      className="absolute top-8 left-0 right-0 bg-red-500/20 border border-red-500/30 rounded-md z-10"
-                      initial={{ height: "120px" }}
-                      whileInView={{ height: "40px" }}
-                      viewport={{ once: true, margin: "-50px" }}
-                      transition={{ duration: 1.5, delay: colIndex * 0.1, ease: "circOut" }}
-                    />
-                    <motion.div
-                      className="absolute top-[160px] left-0 right-0 bg-orange-500/20 border border-orange-500/30 rounded-md z-10"
-                      initial={{ height: "80px" }}
-                      whileInView={{ height: "0px", opacity: 0 }}
-                      viewport={{ once: true, margin: "-50px" }}
-                      transition={{ duration: 1.5, delay: colIndex * 0.1 + 0.2, ease: "circOut" }}
-                    />
-                    <motion.div
-                      className="absolute top-[80px] left-0 right-0 bg-blue-500/20 border border-blue-500/30 rounded-md z-0 flex items-center justify-center overflow-hidden"
-                      initial={{ height: "0px", opacity: 0 }}
-                      whileInView={{ height: "120px", opacity: 1 }}
-                      viewport={{ once: true, margin: "-50px" }}
-                      transition={{ duration: 1.5, delay: colIndex * 0.1 + 0.5, ease: "circOut" }}
-                    >
-                      <span className="text-[10px] font-semibold text-blue-600 dark:text-blue-400 rotate-90 md:rotate-0 whitespace-nowrap">
-                        Trabalho Profundo
-                      </span>
-                    </motion.div>
-                    <motion.div
-                      className="absolute bottom-0 left-0 right-0 bg-primary/10 border border-primary/20 rounded-md z-0 flex items-center justify-center"
-                      initial={{ height: "0px", opacity: 0 }}
-                      whileInView={{ height: "80px", opacity: 1 }}
-                      viewport={{ once: true, margin: "-50px" }}
-                      transition={{ duration: 1.5, delay: colIndex * 0.1 + 0.8, ease: "circOut" }}
-                    >
-                      <span className="text-[10px] font-semibold text-primary">
-                        Tempo Livre
-                      </span>
-                    </motion.div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function TestimonialSection() {
   return (
     <section id="depoimento" className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
@@ -1642,7 +1530,6 @@ export default function Produtividade() {
         <MetricsSection />
         <LoopSection />
         <BeforeAfterSection />
-        <CalendarVisualSection />
         <TestimonialSection />
         <PricingSection />
         <FAQSection />
