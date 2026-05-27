@@ -24,23 +24,25 @@ const CountUp = ({ to, suffix = "", prefix = "", decimals = 0 }: { to: number, s
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   useEffect(() => {
-    if (isInView) {
-      let start = 0;
-      const duration = 2000;
-      const increment = to / (duration / 16);
-      
-      const timer = setInterval(() => {
-        start += increment;
-        if (start >= to) {
-          setCount(to);
-          clearInterval(timer);
-        } else {
-          setCount(start);
-        }
-      }, 16);
-
-      return () => clearInterval(timer);
+    if (!isInView) {
+      return undefined;
     }
+
+    let start = 0;
+    const duration = 2000;
+    const increment = to / (duration / 16);
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= to) {
+        setCount(to);
+        clearInterval(timer);
+      } else {
+        setCount(start);
+      }
+    }, 16);
+
+    return () => clearInterval(timer);
   }, [isInView, to]);
 
   return (

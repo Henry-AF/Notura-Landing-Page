@@ -25,9 +25,9 @@ const AnimatedCounter = ({ end, suffix = "", duration = 2 }: { end: number, suff
 
   useEffect(() => {
     if (inView) {
-      let startTimestamp = null;
+      let startTimestamp: number | null = null;
       const step = (timestamp: number) => {
-        if (!startTimestamp) startTimestamp = timestamp;
+        if (startTimestamp === null) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / (duration * 1000), 1);
         setCount(Math.floor(progress * end));
         if (progress < 1) {

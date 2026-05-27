@@ -658,7 +658,7 @@ export function ProductivityBoost() {
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
       {/* Inject custom fonts locally to ensure display font works in sandbox */}
-      <style dangerouslySetInlineStyle={{__html: `
+      <style dangerouslySetInnerHTML={{__html: `
         @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
         .font-display { font-family: 'Geist', sans-serif; }
         .font-sans { font-family: 'Inter', sans-serif; }
