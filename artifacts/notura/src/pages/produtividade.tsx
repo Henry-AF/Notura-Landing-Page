@@ -28,14 +28,12 @@ import {
   ShieldCheck,
   BadgeCheck,
   Building2,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import appScreenshot from "@assets/image_1779834240530.png";
-import modePresencialImg from "@assets/ChatGPT_Image_26_de_mai._de_2026,_19_31_34_1779838606799.png";
-import modeRemotaImg from "@assets/ChatGPT_Image_26_de_mai._de_2026,_19_32_09_1779838606762.png";
-import modeUploadImg from "@assets/ChatGPT_Image_26_de_mai._de_2026,_19_31_37_1779838606798.png";
 import {
   Accordion,
   AccordionContent,
@@ -1131,7 +1129,6 @@ const recordingModes = [
     id: "presencial",
     label: "Presencial",
     icon: Mic,
-    image: modePresencialImg,
     color: "#6B4EFF",
     softColor: "#EEEBFF",
     title: "Reunião Presencial",
@@ -1143,7 +1140,6 @@ const recordingModes = [
     id: "remota",
     label: "Remota",
     icon: Workflow,
-    image: modeRemotaImg,
     color: "#22C55E",
     softColor: "#DCFCE7",
     title: "Reunião Remota",
@@ -1155,7 +1151,6 @@ const recordingModes = [
     id: "upload",
     label: "Upload",
     icon: FileText,
-    image: modeUploadImg,
     color: "#F59E0B",
     softColor: "#FEF3C7",
     title: "Upload de Arquivo",
@@ -1164,6 +1159,279 @@ const recordingModes = [
     accent: "Suporta MP3, WAV, M4A e MP4",
   },
 ];
+
+type RecordingMode = (typeof recordingModes)[number];
+
+const phoneModeCopy: Record<
+  RecordingMode["id"],
+  {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    helper: string;
+    action: string;
+    tipTitle: string;
+    tip: string;
+  }
+> = {
+  presencial: {
+    eyebrow: "Gravação ao vivo",
+    title: "Gravar Reunião Presencial",
+    subtitle: "Inicie a gravação, confirme ao encerrar e deixe que a IA cuide do resto.",
+    helper: "Use o microfone deste dispositivo para capturar a conversa.",
+    action: "Iniciar gravação",
+    tipTitle: "Detecção Automática de Speakers",
+    tip: "Nossa IA identifica automaticamente quem está falando e separa as falas para uma transcrição impecável.",
+  },
+  remota: {
+    eyebrow: "Integrações conectadas",
+    title: "Conectar Reunião Remota",
+    subtitle: "Cole o link da chamada e deixe a Notura acompanhar a conversa com você.",
+    helper: "Conecte Zoom, Google Meet ou Teams para gravar sem abrir outra ferramenta.",
+    action: "Conectar reunião",
+    tipTitle: "Participação sem fricção",
+    tip: "A Notura acompanha a chamada, registra decisões e organiza os próximos passos automaticamente.",
+  },
+  upload: {
+    eyebrow: "Arquivo existente",
+    title: "Enviar Gravação",
+    subtitle: "Suba áudio ou vídeo de uma reunião já encerrada e receba o resumo no WhatsApp.",
+    helper: "Suporta MP3, WAV, M4A e MP4 com processamento guiado por IA.",
+    action: "Enviar arquivo",
+    tipTitle: "Resumo retroativo",
+    tip: "Mesmo reuniões antigas viram decisões, tarefas e mensagens prontas para compartilhar.",
+  },
+};
+
+function PhoneNoturaLogo() {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="8 0 40 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Notura"
+      className="h-6 w-6 shrink-0"
+    >
+      <rect x="8" width="40" height="40" rx="12" fill="#5341CD" />
+      <path
+        d="M23 26V14H25V26H23ZM27 30V10H29V30H27ZM19 22V18H21V22H19ZM31 26V14H33V26H31ZM35 22V18H37V22H35Z"
+        fill="white"
+      />
+    </svg>
+  );
+}
+
+function PhoneAppPreview({
+  active,
+  activeIndex,
+  onModeSelect,
+}: {
+  active: RecordingMode;
+  activeIndex: number;
+  onModeSelect: (index: number) => void;
+}) {
+  const copy = phoneModeCopy[active.id];
+  const ActiveIcon = active.icon;
+
+  return (
+    <div
+      className="relative w-full overflow-hidden rounded-[40px] border-[6px] border-[#101015] bg-[#101015] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]"
+      style={{ filter: `drop-shadow(0 30px 60px ${active.color}40)` }}
+    >
+      <div className="absolute left-1/2 top-1.5 z-30 h-4 w-20 -translate-x-1/2 rounded-full bg-[#101015]" />
+      <div className="h-[584px] overflow-hidden rounded-[32px] bg-[#F8F7FB] text-[#15131A]">
+        <div className="flex h-full min-h-0 flex-col overflow-hidden">
+          <header
+            className="flex h-12 shrink-0 items-center gap-3 border-b px-3 transition-colors duration-500"
+            style={{
+              background: active.softColor,
+              borderColor: `${active.color}24`,
+            }}
+          >
+            <button
+              type="button"
+              className="rounded-md p-1.5 text-[#6F6A7A] transition hover:bg-[#F1EEF7] hover:text-[#15131A]"
+              aria-label="Abrir menu"
+            >
+              <Menu className="h-4 w-4" />
+            </button>
+            <PhoneNoturaLogo />
+          </header>
+
+          <main className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain">
+            <div className="px-3 py-4">
+              <div className="animate-fade-in min-h-full">
+                <div className="relative overflow-hidden rounded-2xl">
+                  <div
+                    className="absolute inset-0 transition-colors duration-500"
+                    style={{
+                      background: active.color,
+                    }}
+                  >
+                    <div
+                      className="absolute inset-0 opacity-70"
+                      style={{
+                        background: `radial-gradient(circle at 20% 20%, ${active.color} 0%, transparent 34%), radial-gradient(circle at 85% 10%, rgba(255,255,255,0.22), transparent 30%), linear-gradient(135deg, ${active.color} 0%, #1A1326 92%)`,
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-[linear-gradient(120deg,transparent_0%,rgba(255,255,255,0.12)_45%,transparent_70%)]" />
+                  </div>
+                  <div className="relative z-10 min-h-[154px] px-4 pb-7 pt-6">
+                    <nav
+                      aria-label="Breadcrumb"
+                      className="mb-2 flex items-center gap-1.5 text-[9px] font-medium uppercase tracking-wider text-white/60"
+                    >
+                      <span>Dashboard</span>
+                      <span className="text-white/35">/</span>
+                      <span className="text-white/80">{copy.eyebrow}</span>
+                    </nav>
+                    <h3 className="font-display text-[25px] font-extrabold leading-[1.05] text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.3)]">
+                      {copy.title}
+                    </h3>
+                    <p className="mt-2 max-w-[220px] text-[12px] leading-relaxed text-white/75 [text-shadow:0_1px_4px_rgba(0,0,0,0.25)]">
+                      {copy.subtitle}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-col gap-4">
+                  <div className="rounded-2xl border border-[#E5DFEC] bg-white/95 shadow-sm">
+                    <div className="space-y-1 px-4 pb-3 pt-4">
+                      <h4 className="font-display text-sm font-semibold text-[#18151F]">
+                        Informações da gravação
+                      </h4>
+                      <p className="text-[11px] leading-relaxed text-[#777180]">
+                        Defina quem vai receber o sumário e inicie quando estiver tudo pronto.
+                      </p>
+                    </div>
+
+                    <div className="space-y-3 px-4 pb-4">
+                      <div>
+                        <label className="mb-1.5 block text-[9px] font-bold uppercase tracking-[0.1em] text-[#777180]">
+                          Modo da reunião
+                        </label>
+                        <div
+                          role="radiogroup"
+                          className="grid grid-cols-3 items-stretch gap-1 rounded-lg border border-[#E5DFEC] bg-[#F2EFF6] p-1"
+                        >
+                          {recordingModes.map((mode, index) => {
+                            const Icon = mode.icon;
+                            const selected = activeIndex === index;
+                            return (
+                              <button
+                                key={mode.id}
+                                type="button"
+                                role="radio"
+                                aria-checked={selected}
+                                onClick={() => onModeSelect(index)}
+                                className="inline-flex min-w-0 flex-col items-center justify-center gap-1 rounded-md px-1.5 py-2 text-[10px] font-medium transition-all duration-200"
+                                style={{
+                                  background: selected ? active.color : "transparent",
+                                  color: selected ? "#FFFFFF" : "#756F7E",
+                                  boxShadow: selected
+                                    ? "0 1px 5px rgba(26,19,38,0.14)"
+                                    : "none",
+                                }}
+                              >
+                                <Icon className="h-3.5 w-3.5 shrink-0" />
+                                <span className="truncate">{mode.label}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <p className="mt-1.5 text-[10px] leading-relaxed text-[#777180]">
+                          {copy.helper}
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="mb-1.5 block text-[9px] font-bold uppercase tracking-[0.1em] text-[#777180]">
+                          Grupo
+                        </label>
+                        <button
+                          type="button"
+                          className="flex h-9 w-full items-center justify-between rounded-lg border border-[#DED7E8] bg-white px-3 text-[12px] text-[#18151F]"
+                        >
+                          <span>Sem grupo</span>
+                          <ChevronDown className="h-3.5 w-3.5 opacity-50" />
+                        </button>
+                      </div>
+
+                      <div>
+                        <label className="mb-1.5 block text-[9px] font-bold uppercase tracking-[0.1em] text-[#777180]">
+                          Número WhatsApp para resumo
+                        </label>
+                        <button
+                          type="button"
+                          className="flex h-9 w-full items-center justify-between rounded-lg border border-[#DED7E8] bg-white px-3 text-[12px] text-[#18151F]"
+                        >
+                          <span>(13) 99649-5858</span>
+                          <ChevronDown className="h-3.5 w-3.5 opacity-50" />
+                        </button>
+                        <p className="mt-1.5 text-[10px] leading-relaxed text-[#777180]">
+                          O número padrão da sua conta já vem selecionado.
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full px-4 text-[12px] font-semibold text-white shadow-sm transition"
+                        style={{ background: active.color }}
+                      >
+                        <ActiveIcon className="h-3.5 w-3.5" />
+                        {copy.action}
+                      </button>
+
+                      <p className="text-center text-[10px] leading-relaxed text-[#777180]">
+                        Ao encerrar, você poderá descartar ou gerar o sumário da reunião.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    className="relative overflow-hidden rounded-2xl border p-4"
+                    style={{
+                      background: "#1A1326",
+                      borderColor: "#3A2860",
+                    }}
+                  >
+                    <div
+                      className="absolute left-0 right-0 top-0 h-0.5"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, rgb(108, 92, 231), rgb(187, 82, 136))",
+                      }}
+                    />
+                    <div className="flex items-center gap-1.5">
+                      <Sparkles className="h-3 w-3 text-[#BB5288]" />
+                      <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#BB5288]">
+                        AI Insight Tip
+                      </span>
+                    </div>
+                    <p className="mt-2 font-display text-sm font-bold text-white">
+                      {copy.tipTitle}
+                    </p>
+                    <p className="mt-1.5 text-[12px] leading-relaxed text-[#A0A0A0]">
+                      {copy.tip}
+                    </p>
+                    <span
+                      className="pointer-events-none absolute bottom-3 right-3 select-none text-[32px] opacity-25"
+                      aria-hidden="true"
+                    >
+                      🎙
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ModeShowcaseSection() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -1345,7 +1613,7 @@ function ModeShowcaseSection() {
               transition={{ duration: 0.8 }}
             />
 
-            <div className="relative" style={{ width: 280 }}>
+            <div className="relative w-[min(330px,calc(100vw-3rem))]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={active.id}
@@ -1356,13 +1624,10 @@ function ModeShowcaseSection() {
                   className="relative"
                   style={{ perspective: 1200 }}
                 >
-                  <img
-                    src={active.image}
-                    alt={`Tela do app Notura no modo ${active.label}`}
-                    className="w-full h-auto block rounded-[44px]"
-                    style={{
-                      filter: `drop-shadow(0 30px 60px ${active.color}40)`,
-                    }}
+                  <PhoneAppPreview
+                    active={active}
+                    activeIndex={activeIndex}
+                    onModeSelect={setActiveIndex}
                   />
                 </motion.div>
               </AnimatePresence>
@@ -1385,25 +1650,6 @@ function ModeShowcaseSection() {
                 />
               </AnimatePresence>
 
-              <motion.div
-                key={`chip-${active.id}`}
-                initial={{ opacity: 0, x: 20, y: 10 }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="absolute -right-4 lg:-right-12 top-1/3 z-20 flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white shadow-[0_12px_32px_rgba(0,0,0,0.12)] border"
-                style={{ borderColor: `${active.color}30` }}
-              >
-                <motion.span
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                  className="w-2 h-2 rounded-full"
-                  style={{ background: active.color }}
-                />
-                <span className="text-xs font-semibold text-[#0A0A0A]">
-                  Modo {active.label} ativo
-                </span>
-              </motion.div>
             </div>
           </div>
 
