@@ -74,30 +74,6 @@ function NoturaLogo({ compact = false }: { compact?: boolean }) {
   );
 }
 
-const socialProofItems = [
-  {
-    quote:
-      "Antes eu passava quase 1 hora revisando gravações. Agora o resumo chega no WhatsApp antes de eu sair da call.",
-    name: "Mariana Costa",
-    role: "Gerente de Produto",
-    company: "Conta Azul",
-  },
-  {
-    quote:
-      "A maior mudança foi operacional: ninguém mais esquece decisão, dono ou prazo depois da reunião.",
-    name: "Lucas Ferreira",
-    role: "Head de Operações",
-    company: "Layer Up",
-  },
-  {
-    quote:
-      "A Notura tirou o trabalho invisível da rotina do time. A reunião termina e a execução já começa.",
-    name: "Fernanda Lima",
-    role: "Diretora Comercial",
-    company: "PipeDash",
-  },
-];
-
 const faqItems = [
   {
     question: "Minha reunião fica salva? Quem tem acesso ao áudio?",
@@ -174,7 +150,7 @@ function CountUp({
   );
 }
 
-function NavBar() {
+export function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -187,7 +163,6 @@ function NavBar() {
   const navLinks = [
     { label: "Como funciona", href: "#como-funciona" },
     { label: "Resultados", href: "#resultados" },
-    { label: "Depoimento", href: "#depoimento" },
   ];
 
   const scrollTo = (href: string) => {
@@ -219,6 +194,12 @@ function NavBar() {
               {link.label}
             </button>
           ))}
+          <Link
+            href="/planos"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Planos
+          </Link>
         </div>
 
         <div className="hidden md:flex items-center gap-3">
@@ -266,6 +247,13 @@ function NavBar() {
                   {link.label}
                 </button>
               ))}
+              <Link
+                href="/planos"
+                onClick={() => setMenuOpen(false)}
+                className="text-left text-sm font-medium text-muted-foreground hover:text-foreground py-2"
+              >
+                Planos
+              </Link>
               <Button asChild className="rounded-full bg-primary text-white mt-2">
                 <a href={LOGIN_URL} target="_blank" rel="noopener noreferrer">
                   Receber meu primeiro resumo grátis
@@ -843,56 +831,7 @@ function BeforeAfterSection() {
   );
 }
 
-function TestimonialSection() {
-  return (
-    <section id="depoimento" className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-black/10 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
-
-      <div className="page-shell relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="max-w-6xl mx-auto"
-        >
-          <div className="mb-12 text-center">
-            <p className="text-sm uppercase tracking-[0.24em] text-primary-foreground/70">
-              Prova social
-            </p>
-            <h3 className="mt-4 font-display text-3xl md:text-5xl font-medium leading-tight">
-              Times reais usando a Notura para encurtar o caminho entre reunião e execução.
-            </h3>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            {socialProofItems.map((item, i) => (
-              <motion.div
-                key={item.name}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -6, boxShadow: "0 24px 48px rgba(0,0,0,0.18)" }}
-                className="bg-white rounded-2xl p-6 text-left shadow-lg flex flex-col"
-                style={{ cursor: "default" }}
-              >
-                <p className="mb-6 text-base leading-7 text-[#1a1a2e] flex-1">"{item.quote}"</p>
-                <div className="border-t border-gray-100 pt-4">
-                  <p className="font-semibold text-[#0A0A0A]">{item.name}</p>
-                  <p className="text-sm text-gray-400">{item.role}, {item.company}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-function PricingSection() {
+export function PricingSection() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
 
   const plans = [
@@ -1127,7 +1066,7 @@ function FAQSection() {
 }
 
 
-function Footer() {
+export function Footer() {
   return (
     <footer className="py-12 border-t border-border bg-background">
       <div className="page-shell">
@@ -1153,13 +1092,12 @@ function Footer() {
                 <li><Link href="/" className="hover:text-foreground transition-colors">Homepage</Link></li>
                 <li><a href="#como-funciona" className="hover:text-foreground transition-colors">Como funciona</a></li>
                 <li><a href="#resultados" className="hover:text-foreground transition-colors">Resultados</a></li>
-                <li><a href="#precos" className="hover:text-foreground transition-colors">Preços</a></li>
+                <li><Link href="/planos" className="hover:text-foreground transition-colors">Planos</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-3">Empresa</h4>
               <ul className="space-y-2 text-muted-foreground">
-                <li><a href="#depoimento" className="hover:text-foreground transition-colors">Clientes</a></li>
                 <li><a href="#faq" className="hover:text-foreground transition-colors">FAQ</a></li>
                 <li><a href={LOGIN_URL} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Acessar app</a></li>
               </ul>
@@ -1530,7 +1468,6 @@ export default function Produtividade() {
         <MetricsSection />
         <LoopSection />
         <BeforeAfterSection />
-        <TestimonialSection />
         <PricingSection />
         <FAQSection />
       </main>

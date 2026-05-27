@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Produtividade from "@/pages/produtividade";
+import Planos from "@/pages/planos";
 
 const queryClient = new QueryClient();
 
@@ -12,6 +13,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Produtividade} />
+      <Route path="/planos" component={Planos} />
       <Route component={NotFound} />
     </Switch>
   );
