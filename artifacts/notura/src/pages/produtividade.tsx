@@ -433,17 +433,17 @@ function HeroSection() {
 
 function ComparisonSection() {
   const semNotura = [
-    { time: "09:00", title: "Reunião de Alinhamento", duration: "1h 30m", desc: "Anotações espalhadas em 3 docs diferentes" },
-    { time: "10:30", title: "Escrever Ata", duration: "45m", desc: "Tentando lembrar o que foi decidido" },
-    { time: "14:00", title: "Reunião com Cliente", duration: "1h", desc: "Foco dividido entre ouvir e anotar" },
-    { time: "15:00", title: "Follow-up", duration: "30m", desc: "Enviando mensagens manuais cobrando status" },
+    { time: "09:00", title: "Reunião com Cliente", duration: "1h", desc: "Foco dividido: ouvir e anotar ao mesmo tempo" },
+    { time: "10:00", title: "Escrever Ata", duration: "1h 30m", desc: "Tentando lembrar o que foi decidido" },
+    { time: "11:30", title: "Criar Tarefas no Board", duration: "25m", desc: "Copiando itens da ata um por um" },
+    { time: "11:55", title: "Enviar Resumo ao Cliente", duration: "20m", desc: "Redigindo mensagem com o que foi combinado" },
+    { time: "14:30", title: "Cobrar Pendências", duration: "30m", desc: "Cliente não viu nada — começa tudo de novo" },
   ];
   const comNotura = [
-    { time: "09:00", title: "Reunião de Alinhamento", duration: "45m", desc: "Foco total na conversa", type: "meeting" },
-    { time: "09:45", title: "Resumo + Tarefas geradas", duration: "Instantâneo", desc: "Enviado direto pro WhatsApp do time", type: "ai" },
-    { time: "10:00", title: "Trabalho Profundo", duration: "2h 30m", desc: "Executando o que realmente importa", type: "work" },
-    { time: "14:00", title: "Reunião com Cliente", duration: "45m", desc: "Com transcrição e tradução em tempo real", type: "meeting" },
-    { time: "14:45", title: "Insights p/ CRM", duration: "Instantâneo", desc: "Dados estruturados pela IA", type: "ai" },
+    { time: "09:00", title: "Reunião com Cliente", duration: "1h", desc: "Foco total na conversa", type: "meeting" },
+    { time: "10:00", title: "Resumo gerado", duration: "Instantâneo", desc: "Decisões identificadas e enviadas ao cliente no WhatsApp", type: "ai" },
+    { time: "10:00", title: "Kanban atualizado", duration: "Automático", desc: "Tarefas criadas, atribuídas e com prazo", type: "ai" },
+    { time: "10:05", title: "Trabalho Profundo", duration: "Resto do dia", desc: "Time executando. Cliente informado. Feito.", type: "work" },
   ];
 
   return (
@@ -457,8 +457,7 @@ function ComparisonSection() {
             O fim do caos operacional
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground">
-            Veja como uma semana típica se transforma quando a inteligência
-            artificial cuida do trabalho invisível.
+            Veja o que acontece logo após uma reunião com cliente — com e sem Notura.
           </p>
         </div>
 
