@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -54,6 +54,23 @@
 :root {
   --button-outline: rgba(0,0,0, .10);
   --badge-outline: rgba(0,0,0, .05);
+
+  --notura-primary: #6851FF;
+  --notura-primary-light: #8B7AFF;
+  --notura-primary-dark: #5740EE;
+  --notura-primary-glow: rgba(104,81,255,0.3);
+  --notura-secondary: #BA2BF2;
+  --notura-processing: #E43790;
+  --notura-success: #22C55E;
+  --notura-violet-50: #F5F3FF;
+  --notura-violet-200: #DDD6FE;
+  --notura-bg-gradient-mesh: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 40%, #FAF5FF 100%);
+  --notura-bg-gradient-violet: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%);
+  --notura-shadow-glow: 0 0 40px rgba(104,81,255,0.25);
+  --notura-shadow-elevated: 0 4px 12px rgba(0,0,0,0.08);
+  --notura-radius-xl: 24px;
+  --notura-radius-2xl: 32px;
+  --notura-radius-full: 9999px;
 
   --opaque-button-border-intensity: -8;
 
@@ -150,6 +167,9 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply font-sans antialiased bg-background text-foreground;
   }
@@ -161,5 +181,130 @@
 @layer components {
   .page-shell {
     @apply mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8;
+  }
+
+  .notura-card {
+    @apply rounded-[var(--notura-radius-2xl)] border border-[var(--notura-violet-200)] bg-white;
+    box-shadow: var(--notura-shadow-elevated);
+  }
+
+  .notura-button-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-semibold text-white transition-all duration-200;
+    background: var(--notura-primary);
+    box-shadow: var(--notura-shadow-glow);
+  }
+
+  .notura-button-primary:hover {
+    background: var(--notura-primary-dark);
+    transform: translateY(-1px);
+  }
+
+  .notura-button-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border px-7 py-3 text-sm font-semibold transition-all duration-200;
+    background: transparent;
+    border-color: var(--notura-primary);
+    color: var(--notura-primary);
+  }
+
+  .notura-button-secondary:hover {
+    background: color-mix(in srgb, var(--notura-primary) 8%, white);
+    transform: translateY(-1px);
+  }
+
+  .notura-pill {
+    @apply inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium;
+    background: var(--notura-violet-50);
+    border-color: var(--notura-violet-200);
+    color: var(--notura-primary);
+  }
+
+  .notura-section-title {
+    @apply font-display text-4xl font-black tracking-tight text-[#0A0A0A] md:text-5xl;
+  }
+
+  .notura-muted {
+    @apply text-base leading-7 text-zinc-500 md:text-lg;
+  }
+}
+
+@keyframes notura-float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes notura-pulse-slow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes notura-marquee {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes notura-wave {
+  0%,
+  100% {
+    transform: scaleY(0.45);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes morphOrb {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+    border-radius: 44% 56% 58% 42% / 44% 45% 55% 56%;
+  }
+  33% {
+    transform: rotate(120deg) scale(1.03);
+    border-radius: 56% 44% 48% 52% / 58% 37% 63% 42%;
+  }
+  66% {
+    transform: rotate(240deg) scale(0.98);
+    border-radius: 47% 53% 43% 57% / 39% 58% 42% 61%;
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: notura-float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: notura-pulse-slow 6s ease-in-out infinite;
+  }
+
+  .animate-marquee {
+    animation: notura-marquee 18s linear infinite;
+  }
+
+  .animate-wave {
+    transform-origin: center bottom;
+    animation: notura-wave 1.2s ease-in-out infinite;
+  }
+
+  .animate-morph-orb {
+    animation: morphOrb 6s ease-in-out infinite;
   }
 }

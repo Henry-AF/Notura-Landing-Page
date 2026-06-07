@@ -1,69 +1,130 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, Menu, Sparkles, X } from "lucide-react";
+import { LOGIN_URL } from "@/components/landing/constants";
+
+function Brand() {
+  return (
+    <Link href="/" className="flex items-center gap-3">
+      <div className="flex h-10 w-10 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,var(--notura-primary-dark)_0%,var(--notura-primary-light)_100%)] text-white shadow-[var(--notura-shadow-glow)]">
+        <svg viewBox="0 0 48 48" aria-hidden="true" className="h-5 w-5" fill="none">
+          <path d="M11 30 18 18l8 8 11-15" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="11" cy="30" r="3" fill="currentColor" />
+          <circle cx="18" cy="18" r="3" fill="currentColor" />
+          <circle cx="26" cy="26" r="3" fill="currentColor" />
+          <circle cx="37" cy="11" r="3" fill="currentColor" />
+        </svg>
+      </div>
+      <span className="font-display text-xl font-bold tracking-tight text-zinc-950">Notura</span>
+    </Link>
+  );
+}
+
+const productLinks = [
+  { label: "Como funciona", href: "#how-it-works" },
+  { label: "Demonstração", href: "#live-demo" },
+];
+
+const navLinks = [
+  { label: "Recursos", href: "#features" },
+  { label: "Preços", href: "#pricing" },
+  { label: "Blog", href: "#testimonials" },
+];
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [productOpen, setProductOpen] = useState(false);
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 16);
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
+    const onScroll = () => setScrolled(window.scrollY > 16);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scroll = (id: string) => {
+  const scrollTo = (href: string) => {
     setMobileOpen(false);
-    setTimeout(() => {
-      document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
-    }, 50);
+    setProductOpen(false);
+    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/90 backdrop-blur-md shadow-[0_1px_12px_rgba(0,0,0,0.06)] border-b border-violet-100"
-          : "bg-transparent"
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        scrolled ? "border-b border-[var(--notura-violet-200)] bg-white/80 backdrop-blur-md" : "bg-transparent"
       }`}
     >
-      <nav className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-lg" style={{ background: "linear-gradient(135deg, #6851FF 0%, #9B7AFF 100%)" }}>
-            N
-          </div>
-          <span className="font-display font-bold text-lg tracking-tight text-gray-900">
-            Notura
-          </span>
-        </Link>
+      <nav className="page-shell flex h-18 items-center justify-between py-3">
+        <Brand />
 
-        <div className="hidden md:flex items-center gap-7 text-sm font-medium text-gray-600">
-          <button className="flex items-center gap-1 hover:text-violet-700 transition-colors" onClick={() => scroll("#features")}>
-            Produto <ChevronDown className="w-3.5 h-3.5" />
-          </button>
-          <button className="hover:text-violet-700 transition-colors" onClick={() => scroll("#features")}>Recursos</button>
-          <button className="hover:text-violet-700 transition-colors" onClick={() => scroll("#faq")}>Preços</button>
-          <button className="hover:text-violet-700 transition-colors" onClick={() => scroll("#usecases")}>Blog</button>
+        <div className="hidden items-center gap-7 md:flex">
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setProductOpen((value) => !value)}
+              className="flex items-center gap-1 text-sm font-medium text-zinc-600 transition-colors hover:text-[var(--notura-primary)]"
+            >
+              Produto
+              <ChevronDown className={`h-4 w-4 transition-transform ${productOpen ? "rotate-180" : ""}`} />
+            </button>
+            <AnimatePresence>
+              {productOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute left-0 top-full mt-3 w-48 rounded-[24px] border border-[var(--notura-violet-200)] bg-white p-2 shadow-[var(--notura-shadow-elevated)]"
+                >
+                  {productLinks.map((item) => (
+                    <button
+                      key={item.href}
+                      type="button"
+                      onClick={() => scrollTo(item.href)}
+                      className="flex w-full items-center justify-between rounded-[18px] px-3 py-2 text-left text-sm text-zinc-600 transition-colors hover:bg-[var(--notura-violet-50)] hover:text-[var(--notura-primary)]"
+                    >
+                      {item.label}
+                      <Sparkles className="h-3.5 w-3.5" />
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {navLinks.map((item) => (
+            <button
+              key={item.href}
+              type="button"
+              onClick={() => scrollTo(item.href)}
+              className="text-sm font-medium text-zinc-600 transition-colors hover:text-[var(--notura-primary)]"
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-3">
-          <a href="#" className="text-sm font-medium text-gray-600 hover:text-violet-700 transition-colors px-3 py-2">
+        <div className="hidden items-center gap-3 md:flex">
+          <a
+            href={LOGIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-medium text-zinc-600 transition-colors hover:text-[var(--notura-primary)]"
+          >
             Entrar
           </a>
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => scroll("#cta")}
-            className="text-sm font-semibold text-white px-5 py-2.5 rounded-full shadow-lg transition-all"
-            style={{ background: "linear-gradient(135deg, #6851FF 0%, #8B6FFF 100%)", boxShadow: "0 4px 14px rgba(104,81,255,0.35)" }}
-          >
+          <a href={LOGIN_URL} target="_blank" rel="noopener noreferrer" className="notura-button-primary">
             Criar conta
-          </motion.button>
+          </a>
         </div>
 
-        <button className="md:hidden p-2 text-gray-600" onClick={() => setMobileOpen(v => !v)}>
-          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        <button
+          type="button"
+          onClick={() => setMobileOpen((value) => !value)}
+          className="rounded-full border border-[var(--notura-violet-200)] bg-white/80 p-2 text-zinc-700 md:hidden"
+        >
+          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </nav>
 
@@ -73,21 +134,22 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-b border-violet-100 overflow-hidden"
+            className="border-t border-[var(--notura-violet-200)] bg-white/95 md:hidden"
           >
-            <div className="px-4 pb-4 flex flex-col gap-2 text-sm font-medium">
-              {[["Produto", "#features"], ["Recursos", "#features"], ["Preços", "#faq"], ["Blog", "#usecases"]].map(([label, id]) => (
-                <button key={id} onClick={() => scroll(id)} className="text-left text-gray-600 py-2.5 border-b border-gray-100">
-                  {label}
+            <div className="page-shell flex flex-col gap-2 py-4">
+              {productLinks.concat(navLinks).map((item) => (
+                <button
+                  key={item.href}
+                  type="button"
+                  onClick={() => scrollTo(item.href)}
+                  className="rounded-[20px] px-4 py-3 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-[var(--notura-violet-50)]"
+                >
+                  {item.label}
                 </button>
               ))}
-              <button
-                onClick={() => scroll("#cta")}
-                className="mt-3 w-full text-white font-semibold py-3 rounded-full"
-                style={{ background: "linear-gradient(135deg, #6851FF 0%, #8B6FFF 100%)" }}
-              >
-                Criar conta grátis
-              </button>
+              <a href={LOGIN_URL} target="_blank" rel="noopener noreferrer" className="notura-button-primary mt-2 w-full">
+                Criar conta
+              </a>
             </div>
           </motion.div>
         )}

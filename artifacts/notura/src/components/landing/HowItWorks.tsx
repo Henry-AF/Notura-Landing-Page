@@ -1,106 +1,89 @@
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { Upload, Cpu, Search } from "lucide-react";
+import { motion } from "framer-motion";
+import { CheckCheck, Mic, Settings2 } from "lucide-react";
+import { useInView } from "@/hooks/useInView";
+import { fadeInUp, staggerContainer } from "@/lib/animations";
 
 const steps = [
   {
-    number: "01",
-    icon: Upload,
-    title: "Você captura",
-    desc: "Anote qualquer coisa: textos, links, áudios, imagens. De qualquer dispositivo, em qualquer momento.",
-    dark: false,
-    accent: "#6851FF",
+    number: "1",
+    title: "Grave a reunião",
+    description: "Qualquer dispositivo, qualquer idioma, sem alterar o fluxo que seu time já usa.",
+    icon: Mic,
   },
   {
-    number: "02",
-    icon: Cpu,
-    title: "A IA processa",
-    desc: "Notura categoriza, conecta e resume automaticamente. Sem esforço da sua parte.",
-    dark: true,
-    accent: "#fff",
+    number: "2",
+    title: "A IA organiza tudo",
+    description: "Tópicos, decisões, tarefas e alertas surgem em segundos com contexto executivo.",
+    icon: Settings2,
+    featured: true,
   },
   {
-    number: "03",
-    icon: Search,
-    title: "Você acessa",
-    desc: "Encontre qualquer ideia em segundos, em qualquer dispositivo. Busca semântica inclusa.",
-    dark: false,
-    accent: "#6851FF",
+    number: "3",
+    title: "Receba no WhatsApp",
+    description: "O resumo estruturado chega pronto para toda a equipe agir sem retrabalho.",
+    icon: CheckCheck,
   },
 ];
 
 export function HowItWorks() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const { ref, inView } = useInView<HTMLDivElement>(0.25);
 
   return (
-    <section id="how" className="py-24 md:py-32 bg-white" ref={ref}>
-      <div className="max-w-6xl mx-auto px-4 md:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block text-sm font-semibold px-4 py-1.5 rounded-full mb-4" style={{ background: "rgba(104,81,255,0.08)", color: "#6851FF" }}>
-            Como funciona
-          </span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Simples assim. <span style={{ color: "#6851FF" }}>Três passos.</span>
-          </h2>
-          <p className="text-lg text-gray-500 max-w-xl mx-auto">
-            Do caos de anotações ao conhecimento estruturado — automaticamente.
+    <section id="how-it-works" className="bg-white py-24 md:py-28" ref={ref}>
+      <div className="page-shell">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="notura-pill mb-6">Atenção convertida em processo</p>
+          <h2 className="notura-section-title">Simples assim.</h2>
+          <p className="notura-muted mt-5">
+            Três etapas conectadas para transformar uma conversa comum em execução coordenada.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid md:grid-cols-3 gap-5">
-          {steps.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: i * 0.15 }}
-                className={`relative p-8 rounded-3xl transition-transform hover:-translate-y-1 ${
-                  step.dark ? "text-white" : "bg-white border border-violet-100"
-                }`}
-                style={step.dark ? { background: "linear-gradient(135deg, #6851FF 0%, #8B5CF6 100%)" } : {}}
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center"
-                    style={{
-                      background: step.dark ? "rgba(255,255,255,0.15)" : "rgba(104,81,255,0.08)",
-                    }}
-                  >
-                    <Icon className="w-6 h-6" style={{ color: step.dark ? "#fff" : "#6851FF" }} />
-                  </div>
-                  <span
-                    className="text-5xl font-black opacity-20 font-display"
-                    style={{ color: step.dark ? "#fff" : "#6851FF" }}
-                  >
-                    {step.number}
-                  </span>
-                </div>
-                <h3 className={`font-display text-xl font-bold mb-3 ${step.dark ? "text-white" : "text-gray-900"}`}>
-                  {step.title}
-                </h3>
-                <p className={`leading-relaxed text-sm ${step.dark ? "text-white/75" : "text-gray-500"}`}>
-                  {step.desc}
-                </p>
+        <div className="relative mx-auto mt-14 max-w-6xl">
+          <div className="absolute left-8 right-8 top-10 hidden h-[2px] bg-zinc-100 md:block" />
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={inView ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0, 0, 0.2, 1] }}
+            className="absolute left-8 right-8 top-10 hidden h-[2px] origin-left bg-[linear-gradient(90deg,var(--notura-primary)_0%,var(--notura-secondary)_60%,var(--notura-success)_100%)] md:block"
+          />
 
-                {/* Connector arrow (not on last) */}
-                {i < steps.length - 1 && (
-                  <div className="hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-6 h-6 rounded-full bg-white border border-violet-100 items-center justify-center shadow-sm">
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                      <path d="M1 5h8M5 1l4 4-4 4" stroke="#6851FF" strokeWidth="1.5" strokeLinecap="round" />
-                    </svg>
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            className="grid gap-5 md:grid-cols-3"
+          >
+            {steps.map((step) => {
+              const Icon = step.icon;
+              return (
+                <motion.div
+                  key={step.number}
+                  variants={fadeInUp}
+                  className={`relative rounded-[var(--notura-radius-2xl)] border p-7 md:p-8 ${
+                    step.featured
+                      ? "border-[var(--notura-primary)] bg-[var(--notura-primary)] text-white shadow-[var(--notura-shadow-glow)]"
+                      : "border-[var(--notura-violet-200)] bg-white text-zinc-950 shadow-[var(--notura-shadow-elevated)]"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div
+                      className={`flex h-14 w-14 items-center justify-center rounded-[24px] ${
+                        step.featured ? "bg-white/14 text-white" : "bg-[var(--notura-violet-50)] text-[var(--notura-primary)]"
+                      }`}
+                    >
+                      <Icon className={`h-6 w-6 ${step.number === "1" ? "animate-pulse" : ""}`} />
+                    </div>
+                    <span className={`font-display text-5xl font-black ${step.featured ? "text-white/25" : "text-zinc-200"}`}>
+                      {step.number}
+                    </span>
                   </div>
-                )}
-              </motion.div>
-            );
-          })}
+                  <h3 className="mt-8 font-display text-2xl font-bold">{step.title}</h3>
+                  <p className={`mt-3 text-sm leading-7 ${step.featured ? "text-white/78" : "text-zinc-500"}`}>{step.description}</p>
+                </motion.div>
+              );
+            })}
+          </motion.div>
         </div>
       </div>
     </section>
