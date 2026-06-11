@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { CheckCheck, Mic, Settings2 } from "lucide-react";
+import { CheckCheck, ListTodo, Mic, Settings2 } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 
@@ -23,36 +23,36 @@ const steps = [
     description: "O resumo estruturado chega pronto para toda a equipe agir sem retrabalho.",
     icon: CheckCheck,
   },
+  {
+    number: "4",
+    title: "Tarefas vão pro Kanban",
+    description: "Action items viram cards com responsável, prazo e status, prontos para execução.",
+    icon: ListTodo,
+  },
 ];
 
 export function HowItWorks() {
   const { ref, inView } = useInView<HTMLDivElement>(0.25);
 
   return (
-    <section id="how-it-works" className="bg-white py-24 md:py-28" ref={ref}>
+    <section id="como-funciona" className="bg-white py-24 md:py-28" ref={ref}>
       <div className="page-shell">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="notura-pill mb-6">Atenção convertida em processo</p>
+          <p className="notura-pill mb-6">Como funciona</p>
           <h2 className="notura-section-title">Simples assim.</h2>
           <p className="notura-muted mt-5">
-            Três etapas conectadas para transformar uma conversa comum em execução coordenada.
+            Quatro etapas conectadas para transformar uma conversa comum em execução coordenada.
           </p>
         </div>
 
         <div className="relative mx-auto mt-14 max-w-6xl">
-          <div className="absolute left-8 right-8 top-10 hidden h-[2px] bg-zinc-100 md:block" />
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={inView ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0, 0, 0.2, 1] }}
-            className="absolute left-8 right-8 top-10 hidden h-[2px] origin-left bg-[linear-gradient(90deg,var(--notura-primary)_0%,var(--notura-secondary)_60%,var(--notura-success)_100%)] md:block"
-          />
+          <div className="absolute left-8 right-8 top-10 hidden border-t-2 border-dashed border-zinc-200 md:block" />
 
           <motion.div
             variants={staggerContainer}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
-            className="grid gap-5 md:grid-cols-3"
+            className="grid gap-5 md:grid-cols-4"
           >
             {steps.map((step) => {
               const Icon = step.icon;
@@ -60,15 +60,15 @@ export function HowItWorks() {
                 <motion.div
                   key={step.number}
                   variants={fadeInUp}
-                  className={`relative rounded-[var(--notura-radius-2xl)] border p-7 md:p-8 ${
+                  className={`relative rounded-[14px] border p-7 md:p-6 ${
                     step.featured
-                      ? "border-[var(--notura-primary)] bg-[var(--notura-primary)] text-white shadow-[var(--notura-shadow-glow)]"
-                      : "border-[var(--notura-violet-200)] bg-white text-zinc-950 shadow-[var(--notura-shadow-elevated)]"
+                      ? "border-[var(--notura-primary)] bg-[var(--notura-primary)] text-white shadow-[0_6px_24px_rgba(83,65,205,0.12)]"
+                      : "border-[var(--notura-violet-200)] bg-white text-zinc-950 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div
-                      className={`flex h-14 w-14 items-center justify-center rounded-[24px] ${
+                      className={`flex h-14 w-14 items-center justify-center rounded-[14px] ${
                         step.featured ? "bg-white/14 text-white" : "bg-[var(--notura-violet-50)] text-[var(--notura-primary)]"
                       }`}
                     >

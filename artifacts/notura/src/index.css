@@ -55,19 +55,20 @@
   --button-outline: rgba(0,0,0, .10);
   --badge-outline: rgba(0,0,0, .05);
 
-  --notura-primary: #6851FF;
-  --notura-primary-light: #8B7AFF;
-  --notura-primary-dark: #5740EE;
-  --notura-primary-glow: rgba(104,81,255,0.3);
-  --notura-secondary: #BA2BF2;
+  --notura-primary: #5341CD;
+  --notura-primary-light: #7B6FE8;
+  --notura-primary-dark: #4333B8;
+  --notura-primary-glow: rgba(83,65,205,0.3);
+  --notura-secondary: #7B6FE8;
   --notura-processing: #E43790;
   --notura-success: #22C55E;
-  --notura-violet-50: #F5F3FF;
-  --notura-violet-200: #DDD6FE;
-  --notura-bg-gradient-mesh: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 40%, #FAF5FF 100%);
-  --notura-bg-gradient-violet: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%);
-  --notura-shadow-glow: 0 0 40px rgba(104,81,255,0.25);
-  --notura-shadow-elevated: 0 4px 12px rgba(0,0,0,0.08);
+  --notura-violet-50: #EEF0FF;
+  --notura-violet-200: #DDD8F5;
+  --notura-bg-gradient-mesh: linear-gradient(135deg, #FAFAFA 0%, #EEF0FF 55%, #FFFFFF 100%);
+  --notura-bg-gradient-violet: linear-gradient(135deg, #5341CD 0%, #7B6FE8 100%);
+  --notura-bg-gradient-grainient: linear-gradient(135deg, #9B8AFB 0%, #5341CD 55%, #3B28A8 100%);
+  --notura-shadow-glow: 0 6px 24px rgba(83,65,205,0.20);
+  --notura-shadow-elevated: 0 2px 12px rgba(0,0,0,0.06);
   --notura-radius-xl: 24px;
   --notura-radius-2xl: 32px;
   --notura-radius-full: 9999px;
@@ -90,7 +91,7 @@
   --popover-foreground: 240 10% 10%;
   --popover-border: 240 5% 90%;
 
-  --primary: 262 83% 58%;
+  --primary: 248 58% 53%;
   --primary-foreground: 0 0% 100%;
 
   --secondary: 240 5% 96%;
@@ -99,19 +100,19 @@
   --muted: 240 5% 96%;
   --muted-foreground: 240 5% 45%;
 
-  --accent: 262 83% 96%;
-  --accent-foreground: 262 83% 58%;
+  --accent: 232 100% 96%;
+  --accent-foreground: 248 58% 53%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
   --input: 240 5% 90%;
-  --ring: 262 83% 58%;
+  --ring: 248 58% 53%;
 
-  --app-font-sans: 'Inter', sans-serif;
+  --app-font-sans: 'Poppins', sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: Menlo, monospace;
-  --app-font-display: 'Plus Jakarta Sans', sans-serif;
+  --app-font-display: 'Poppins', sans-serif;
   
   --radius: .75rem;
 
@@ -144,7 +145,7 @@
   --popover-foreground: 0 0% 98%;
   --popover-border: 240 5% 15%;
 
-  --primary: 262 83% 65%;
+  --primary: 248 58% 62%;
   --primary-foreground: 0 0% 100%;
 
   --secondary: 240 5% 15%;
@@ -153,14 +154,14 @@
   --muted: 240 5% 15%;
   --muted-foreground: 240 5% 65%;
 
-  --accent: 262 30% 15%;
-  --accent-foreground: 262 83% 75%;
+  --accent: 248 30% 18%;
+  --accent-foreground: 248 58% 78%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
   --input: 240 5% 15%;
-  --ring: 262 83% 65%;
+  --ring: 248 58% 62%;
 }
 
 @layer base {
@@ -225,6 +226,30 @@
   .notura-muted {
     @apply text-base leading-7 text-zinc-500 md:text-lg;
   }
+
+  .notura-grainient {
+    position: relative;
+    background: var(--notura-bg-gradient-grainient);
+    background-size: 200% 200%;
+    animation: notura-grainient-shift 12s ease infinite;
+  }
+
+  .notura-grainient::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44NSIgbnVtT2N0YXZlcz0iMiIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCUyM24pIi8+PC9zdmc+");
+    background-size: 160px 160px;
+    opacity: 0.12;
+    mix-blend-mode: overlay;
+  }
+}
+
+@keyframes notura-grainient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 @keyframes notura-float {

@@ -6,71 +6,106 @@ import { fadeInUp } from "@/lib/animations";
 
 const faqs = [
   {
-    q: "Notura é gratuito?",
-    a: "Sim, o plano gratuito cobre as features essenciais. Os planos pagos liberam IA avançada e armazenamento ilimitado.",
+    q: "O Notura é gratuito?",
+    a: "Sim, o plano gratuito cobre as funcionalidades essenciais — transcrição, resumo e action items para até 5 reuniões por mês. Os planos pagos liberam reuniões ilimitadas, IA avançada e integração com Kanban.",
   },
   {
-    q: "Meus dados são seguros?",
-    a: "Criptografia end-to-end e armazenamento na sua região. O fluxo foi desenhado com foco em conformidade com LGPD.",
+    q: "Funciona com reuniões presenciais?",
+    a: "Sim. Basta abrir o app no celular e gravar a reunião presencialmente. Não é necessário nenhum bot ou integração com plataforma de videoconferência.",
   },
   {
-    q: "Como começar?",
-    a: "Crie sua conta em 30 segundos. Sem cartão de crédito necessário para iniciar o primeiro fluxo.",
+    q: "Em quais idiomas funciona?",
+    a: "O Notura transcreve e resume em português, inglês, espanhol e vários outros idiomas. A detecção é automática — basta gravar e o sistema identifica o idioma da reunião.",
+  },
+  {
+    q: "Meus dados são seguros e conformes com a LGPD?",
+    a: "Sim. Os dados são armazenados no Brasil, com criptografia em trânsito e em repouso. O Notura foi desenhado desde o início com conformidade à LGPD e pode ser contratado com DPA (Acordo de Processamento de Dados) para empresas.",
   },
   {
     q: "Funciona offline?",
-    a: "O app móvel funciona offline e sincroniza automaticamente quando a conexão voltar.",
+    a: "A gravação funciona offline e sincroniza automaticamente quando a conexão for restabelecida. A transcrição e o resumo são processados na nuvem após a sincronização.",
   },
   {
-    q: "Integra com meu CRM?",
-    a: "Sim. Pipedrive, HubSpot, Salesforce e outros via Zapier ou API.",
+    q: "Integra com outras ferramentas?",
+    a: "Sim. O Notura integra com Slack, Notion, Jira, Linear e outros via API ou Zapier. Os action items podem ser exportados diretamente para o board do seu time.",
   },
 ];
 
 export function FAQ() {
   const { ref, inView } = useInView<HTMLDivElement>(0.12);
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <section id="faq" className="bg-white py-24 md:py-28" ref={ref}>
-      <div className="page-shell max-w-4xl">
-        <motion.div initial="hidden" animate={inView ? "visible" : "hidden"} variants={fadeInUp} className="mx-auto max-w-3xl text-center">
-          <p className="notura-pill mb-6">FAQ</p>
-          <h2 className="notura-section-title">Perguntas frequentes</h2>
-          <p className="notura-muted mt-5">Clareza sobre adoção, segurança e integração antes do primeiro resumo.</p>
-        </motion.div>
+      <div className="page-shell">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-[280px_1fr]">
 
-        <div className="mt-12 space-y-3">
-          {faqs.map((item, index) => {
-            const isOpen = openIndex === index;
-            return (
-              <div key={item.q} className="overflow-hidden rounded-[28px] border border-[var(--notura-violet-200)] bg-white shadow-[var(--notura-shadow-elevated)]">
-                <button
-                  type="button"
-                  onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors hover:bg-[var(--notura-violet-50)]"
-                >
-                  <span className="font-display text-lg font-bold text-zinc-950">{item.q}</span>
-                  <span className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors ${isOpen ? "bg-[var(--notura-primary)] text-white" : "bg-[var(--notura-violet-50)] text-[var(--notura-primary)]"}`}>
-                    <ChevronDown className={`h-5 w-5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
-                  </span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.24 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-6 pb-6 pt-1 text-sm leading-7 text-zinc-500">{item.a}</div>
-                    </motion.div>
+          {/* Título à esquerda — igual à referência */}
+          <motion.div
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            variants={fadeInUp}
+            className="lg:pt-2"
+          >
+            <h2 className="font-display text-3xl font-bold tracking-[-0.02em] text-zinc-900 md:text-4xl">
+              Perguntas frequentes
+            </h2>
+          </motion.div>
+
+          {/* Lista de perguntas à direita */}
+          <motion.div
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            variants={fadeInUp}
+            ref={ref}
+          >
+            {faqs.map((item, index) => {
+              const isOpen = openIndex === index;
+              const isLast = index === faqs.length - 1;
+
+              return (
+                <div key={item.q}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                    className="flex w-full items-center justify-between gap-6 py-6 text-left transition-opacity hover:opacity-70"
+                  >
+                    <span className="text-base font-medium text-zinc-800 md:text-lg">
+                      {item.q}
+                    </span>
+                    <ChevronDown
+                      className={`h-5 w-5 shrink-0 text-zinc-400 transition-transform duration-200 ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* Resposta animada */}
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.22, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <p className="pb-6 text-sm leading-7 text-zinc-500 md:text-base">
+                          {item.a}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Divisor laranja — igual à referência */}
+                  {!isLast && (
+                    <div className="h-px w-full bg-[#F5A623]/40" />
                   )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
+                </div>
+              );
+            })}
+          </motion.div>
+
         </div>
       </div>
     </section>

@@ -1,87 +1,164 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Star } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 
-function CountUp({ target, suffix = "", duration = 1500 }: { target: number; suffix?: string; duration?: number }) {
-  const { ref, inView } = useInView<HTMLSpanElement>(0.3);
-  const [value, setValue] = useState(0);
+const CATEGORIES = [
+  "Todos",
+  "Produtividade",
+  "Reuniões",
+  "Action items",
+  "Transcrição",
+  "Time",
+];
 
-  useEffect(() => {
-    if (!inView) return;
-    const start = performance.now();
-    let frame = 0;
-
-    const tick = (time: number) => {
-      const progress = Math.min((time - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 4);
-      setValue(target * eased);
-      if (progress < 1) frame = requestAnimationFrame(tick);
-    };
-
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [duration, inView, target]);
-
-  return (
-    <span ref={ref}>
-      {Math.round(value).toLocaleString("pt-BR")}
-      {suffix}
-    </span>
-  );
-}
+const testimonials = [
+  {
+    name: "Rafael M.",
+    role: "Product Manager",
+    company: "Aster",
+    quote:
+      "Notura mudou completamente como eu processo informação. Antes eu perdia horas procurando anotações. Agora a IA faz isso por mim.",
+    category: "Produtividade",
+  },
+  {
+    name: "Camila L.",
+    role: "Head de Operações",
+    company: "Fivve",
+    quote:
+      "Os action items chegam no time antes mesmo de eu sair da sala. O retrabalho pós-reunião praticamente sumiu.",
+    category: "Action items",
+  },
+  {
+    name: "Thiago S.",
+    role: "Diretor Comercial",
+    company: "Orbit",
+    quote:
+      "A transcrição em português é impressionantemente precisa, mesmo com vários falantes ao mesmo tempo. Virou parte do nosso processo.",
+    category: "Transcrição",
+  },
+  {
+    name: "Ana Beatriz S.",
+    role: "Head de Operações",
+    company: "Clarity",
+    quote:
+      "O Notura eliminou completamente aquele e-mail de ata que ninguém lia. Agora o cliente recebe o resumo em menos de 5 minutos após a reunião.",
+    category: "Reuniões",
+  },
+  {
+    name: "Dr. Rafael T.",
+    role: "Coordenador de TI",
+    company: "Hospital Regional",
+    quote:
+      "Finalmente consigo registrar as decisões das reuniões de equipe clínica sem precisar designar um anotador. E ainda temos histórico pesquisável.",
+    category: "Time",
+  },
+  {
+    name: "Carolina M.",
+    role: "Gerente de Projetos",
+    company: "Ventur",
+    quote:
+      "Antes passava 30 minutos depois de cada reunião tentando lembrar o que foi decidido. Hoje o resumo chega antes de eu fechar a call.",
+    category: "Reuniões",
+  },
+];
 
 export function Testimonials() {
   const { ref, inView } = useInView<HTMLDivElement>(0.15);
+  const [activeCategory, setActiveCategory] = useState("Todos");
+
+  const filtered =
+    activeCategory === "Todos"
+      ? testimonials
+      : testimonials.filter((t) => t.category === activeCategory);
 
   return (
-    <section id="testimonials" className="bg-[var(--notura-violet-50)] py-24 md:py-28" ref={ref}>
+    <section
+      id="testimonials"
+      className="bg-white py-24 md:py-32"
+      ref={ref}
+    >
       <div className="page-shell">
+        {/* Header */}
         <motion.div
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          variants={fadeInUp}
+          className="mb-12 text-center"
+        >
+          <h2 className="font-display text-4xl font-bold tracking-[-0.03em] text-zinc-900 md:text-5xl">
+            O que os usuários dizem
+          </h2>
+          <p className="mt-3 text-base text-zinc-500">
+            Times reais. Resultados reais. Reuniões transformadas.
+          </p>
+        </motion.div>
+
+        {/* Filtros de categoria */}
+        <motion.div
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          variants={fadeInUp}
+          className="mb-10 flex flex-wrap justify-center gap-2"
+        >
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setActiveCategory(cat)}
+              className={`rounded-full border px-5 py-2 text-sm font-medium transition-all duration-200 ${
+                activeCategory === cat
+                  ? "border-[#5341CD] bg-[#5341CD]/8 text-[#5341CD]"
+                  : "border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:text-zinc-700"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </motion.div>
+
+        {/* Grid de cards */}
+        <motion.div
+          key={activeCategory}
           variants={staggerContainer}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]"
+          className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
-          <motion.div variants={fadeInUp} className="rounded-[var(--notura-radius-2xl)] bg-white p-8 shadow-[var(--notura-shadow-elevated)]">
-            <p className="notura-pill mb-6">Prova social</p>
-            <h2 className="notura-section-title text-left">Quem usa a Notura ganha velocidade sem perder contexto.</h2>
-            <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              <div className="rounded-[24px] bg-[var(--notura-violet-50)] p-4">
-                <p className="text-3xl font-black text-zinc-950"><CountUp target={2000} suffix="+" /></p>
-                <p className="mt-2 text-sm text-zinc-500">usuários ativos</p>
-              </div>
-              <div className="rounded-[24px] bg-[var(--notura-violet-50)] p-4">
-                <p className="text-3xl font-black text-zinc-950"><CountUp target={1200} /></p>
-                <p className="mt-2 text-sm text-zinc-500">reuniões por semana</p>
-              </div>
-              <div className="rounded-[24px] bg-[var(--notura-violet-50)] p-4">
-                <p className="text-3xl font-black text-zinc-950"><CountUp target={10} suffix="h" /></p>
-                <p className="mt-2 text-sm text-zinc-500">economizadas por semana</p>
-              </div>
-            </div>
-          </motion.div>
+          {filtered.map(({ name, role, company, quote, category }) => (
+            <motion.div
+              key={name}
+              variants={fadeInUp}
+              className="flex flex-col rounded-2xl border border-[#F5A623]/30 bg-white p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all duration-300 hover:border-[#F5A623]/60 hover:shadow-[0_8px_32px_rgba(245,166,35,0.10)]"
+            >
+              {/* Aspas — laranja como na referência */}
+              <span
+                className="mb-4 font-serif text-4xl font-black leading-none"
+                style={{ color: "#F5A623" }}
+                aria-hidden="true"
+              >
+                "
+              </span>
 
-          <motion.div variants={fadeInUp} className="rounded-[var(--notura-radius-2xl)] border border-[var(--notura-violet-200)] bg-[linear-gradient(180deg,var(--notura-violet-50)_0%,white_100%)] p-8 shadow-[var(--notura-shadow-elevated)]">
-            <div className="flex gap-1 text-amber-400">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <Star key={index} className="h-5 w-5 fill-current" />
-              ))}
-            </div>
-            <blockquote className="mt-6 font-display text-2xl font-semibold leading-10 text-zinc-950 md:text-[2rem]">
-              “Notura mudou completamente como eu processo informação. Antes eu perdia horas procurando anotações. Agora a IA faz isso por mim.”
-            </blockquote>
-            <div className="mt-8 flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--notura-primary)] text-lg font-bold text-white">
-                RM
+              {/* Texto do depoimento */}
+              <blockquote className="flex-1 text-sm leading-7 text-zinc-600">
+                {quote}
+              </blockquote>
+
+              {/* Nome — laranja como na referência */}
+              <div className="mt-6 border-t border-zinc-100 pt-5">
+                <p
+                  className="text-sm font-semibold"
+                  style={{ color: "#F5A623" }}
+                >
+                  {name}
+                </p>
+                <p className="mt-0.5 text-xs text-zinc-400">
+                  {role} · {company}
+                </p>
               </div>
-              <div>
-                <p className="font-display text-lg font-bold text-zinc-950">Rafael M.</p>
-                <p className="text-sm text-zinc-500">Product Manager</p>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>

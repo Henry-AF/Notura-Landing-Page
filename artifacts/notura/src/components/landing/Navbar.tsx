@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Menu, Sparkles, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { LOGIN_URL } from "@/components/landing/constants";
+import { GrainientButton } from "@/components/ui/grainient-button";
 
 function Brand() {
   return (
@@ -21,31 +22,24 @@ function Brand() {
   );
 }
 
-const productLinks = [
-  { label: "Como funciona", href: "#how-it-works" },
-  { label: "Demonstração", href: "#live-demo" },
-];
-
 const navLinks = [
-  { label: "Recursos", href: "#features" },
-  { label: "Preços", href: "#pricing" },
-  { label: "Blog", href: "#testimonials" },
+  { label: "Funcionalidades", href: "#funcionalidades" },
+  { label: "Como funciona", href: "#como-funciona" },
+  { label: "Planos", href: "#planos" },
 ];
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [productOpen, setProductOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const scrollTo = (href: string) => {
     setMobileOpen(false);
-    setProductOpen(false);
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -59,40 +53,6 @@ export function Navbar() {
         <Brand />
 
         <div className="hidden items-center gap-7 md:flex">
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setProductOpen((value) => !value)}
-              className="flex items-center gap-1 text-sm font-medium text-zinc-600 transition-colors hover:text-[var(--notura-primary)]"
-            >
-              Produto
-              <ChevronDown className={`h-4 w-4 transition-transform ${productOpen ? "rotate-180" : ""}`} />
-            </button>
-            <AnimatePresence>
-              {productOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  transition={{ duration: 0.18 }}
-                  className="absolute left-0 top-full mt-3 w-48 rounded-[24px] border border-[var(--notura-violet-200)] bg-white p-2 shadow-[var(--notura-shadow-elevated)]"
-                >
-                  {productLinks.map((item) => (
-                    <button
-                      key={item.href}
-                      type="button"
-                      onClick={() => scrollTo(item.href)}
-                      className="flex w-full items-center justify-between rounded-[18px] px-3 py-2 text-left text-sm text-zinc-600 transition-colors hover:bg-[var(--notura-violet-50)] hover:text-[var(--notura-primary)]"
-                    >
-                      {item.label}
-                      <Sparkles className="h-3.5 w-3.5" />
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
           {navLinks.map((item) => (
             <button
               key={item.href}
@@ -114,9 +74,9 @@ export function Navbar() {
           >
             Entrar
           </a>
-          <a href={LOGIN_URL} target="_blank" rel="noopener noreferrer" className="notura-button-primary">
-            Criar conta
-          </a>
+          <GrainientButton href={LOGIN_URL} target="_blank" rel="noopener noreferrer">
+            Começar grátis
+          </GrainientButton>
         </div>
 
         <button
@@ -137,7 +97,7 @@ export function Navbar() {
             className="border-t border-[var(--notura-violet-200)] bg-white/95 md:hidden"
           >
             <div className="page-shell flex flex-col gap-2 py-4">
-              {productLinks.concat(navLinks).map((item) => (
+              {navLinks.map((item) => (
                 <button
                   key={item.href}
                   type="button"
@@ -147,9 +107,17 @@ export function Navbar() {
                   {item.label}
                 </button>
               ))}
-              <a href={LOGIN_URL} target="_blank" rel="noopener noreferrer" className="notura-button-primary mt-2 w-full">
-                Criar conta
+              <a
+                href={LOGIN_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-[20px] px-4 py-3 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-[var(--notura-violet-50)]"
+              >
+                Entrar
               </a>
+              <GrainientButton href={LOGIN_URL} target="_blank" rel="noopener noreferrer" className="mt-2 w-full">
+                Começar grátis
+              </GrainientButton>
             </div>
           </motion.div>
         )}

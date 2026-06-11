@@ -3,14 +3,15 @@ import { Link } from "wouter";
 const footerColumns = {
   Produto: ["Recursos", "Preços", "Changelog", "Status"],
   Empresa: ["Blog", "Sobre", "Contato"],
+  Suporte: ["Central de ajuda", "Documentação", "Comunidade"],
   Legal: ["Privacidade", "Termos"],
 };
 
 export function Footer() {
   return (
-    <footer className="bg-zinc-950 text-zinc-400">
+    <footer className="bg-[#0F0F0F] text-[#9B9B9B]">
       <div className="page-shell py-16">
-        <div className="grid gap-10 border-b border-white/10 pb-10 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
+        <div className="grid gap-10 border-b border-white/10 pb-10 md:grid-cols-[1.2fr_0.7fr_0.7fr_0.7fr_0.7fr]">
           <div>
             <Link href="/" className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,var(--notura-primary-dark)_0%,var(--notura-primary-light)_100%)] text-white shadow-[var(--notura-shadow-glow)]">
