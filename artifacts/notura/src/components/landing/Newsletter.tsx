@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
 import { fadeInUp } from "@/lib/animations";
 
@@ -17,18 +16,38 @@ export function Newsletter() {
 
   return (
     <section ref={ref} className="relative overflow-hidden py-20 md:py-24">
-      {/* Fundo gradiente roxo — igual ao roxo da marca */}
+
+      {/* Fundo roxo base */}
+      <div className="absolute inset-0 bg-[#5341CD]" />
+
+      {/* Camada de "silk" simulada com gradientes animados em CSS — sem R3F */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 opacity-60"
         style={{
-          background:
-            "linear-gradient(120deg, #EEF0FF 0%, #C4B5FD 35%, #9B8AFB 60%, #DDD8F5 100%)",
+          background: `
+            radial-gradient(ellipse 80% 60% at 20% 40%, #7B6FE8 0%, transparent 60%),
+            radial-gradient(ellipse 60% 80% at 80% 20%, #9B8AFB 0%, transparent 55%),
+            radial-gradient(ellipse 70% 50% at 50% 80%, #4333B8 0%, transparent 60%)
+          `,
+          animation: "silkShift 8s ease-in-out infinite alternate",
         }}
       />
 
-      {/* Ruído de textura sutil — replica o grain da referência */}
+      {/* Segunda camada para profundidade */}
       <div
-        className="absolute inset-0 opacity-[0.04]"
+        className="absolute inset-0 opacity-30"
+        style={{
+          background: `
+            radial-gradient(ellipse 100% 40% at 60% 60%, #C084FC 0%, transparent 50%),
+            radial-gradient(ellipse 50% 70% at 10% 80%, #818CF8 0%, transparent 55%)
+          `,
+          animation: "silkShift 12s ease-in-out infinite alternate-reverse",
+        }}
+      />
+
+      {/* Grain sutil */}
+      <div
+        className="absolute inset-0 opacity-[0.05]"
         style={{
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
@@ -37,62 +56,74 @@ export function Newsletter() {
         }}
       />
 
+      {/* Animação keyframe inline */}
+      <style>{`
+        @keyframes silkShift {
+          0%   { transform: scale(1)    translate(0%,   0%); }
+          33%  { transform: scale(1.08) translate(3%,  -2%); }
+          66%  { transform: scale(0.96) translate(-2%,  4%); }
+          100% { transform: scale(1.04) translate(1%,  -3%); }
+        }
+      `}</style>
+
       <div className="page-shell relative z-10">
         <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={fadeInUp}
-          className="grid grid-cols-1 items-center gap-10 md:grid-cols-2"
+          className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-10"
         >
-          {/* Lado esquerdo — copy */}
-          <div>
-            <p className="max-w-md text-lg leading-relaxed text-zinc-900 md:text-xl">
+          {/* Copy */}
+          <div className="text-center md:text-left">
+            <p className="max-w-md text-lg leading-relaxed text-white md:text-xl">
               Quer receber{" "}
               <strong className="font-bold">dicas de produtividade em reuniões</strong>{" "}
               direto na sua caixa de entrada?
             </p>
           </div>
 
-          {/* Lado direito — formulário */}
+          {/* Formulário */}
           <div>
             {submitted ? (
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex flex-col gap-1"
+                className="flex flex-col items-center gap-2 text-center md:items-start md:text-left"
               >
-                <p className="text-sm font-medium text-zinc-800">
+                <p className="text-sm font-medium text-white/80">
                   Inscreva-se para receber dicas do{" "}
-                  <span className="font-bold">Notura</span> no seu e-mail
+                  <span className="font-bold text-white">Notura</span> no seu e-mail
                 </p>
-                <p className="text-base font-semibold text-zinc-900">
+                <p className="text-base font-semibold text-white">
                   ✓ Você está na lista!
                 </p>
               </motion.div>
             ) : (
-              <div className="flex flex-col gap-2">
-                <p className="text-sm font-medium text-zinc-800">
+              <div className="flex flex-col items-center gap-3 md:items-start">
+                <p className="text-center text-sm font-medium text-white/80 md:text-left">
                   Inscreva-se para receber dicas do{" "}
-                  <span className="font-bold">Notura</span> no seu e-mail
+                  <span className="font-bold text-white">Notura</span> no seu e-mail
                 </p>
                 <form
                   onSubmit={handleSubmit}
-                  className="flex items-center gap-2"
+                  className="flex w-full flex-col gap-3 md:flex-row md:items-center"
                 >
+                  {/* Input maior */}
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Digite seu melhor e-mail"
-                    className="h-12 flex-1 rounded-full border border-zinc-900/15 bg-white/80 px-5 text-sm text-zinc-900 placeholder-zinc-400 outline-none backdrop-blur-sm transition focus:border-zinc-900/30 focus:ring-2 focus:ring-zinc-900/10"
+                    className="h-40 w-full flex-1 rounded-full border border-white/20 bg-white/15 px-6 text-base text-white placeholder-white/50 outline-none backdrop-blur-sm transition focus:border-white/40 focus:bg-white/20 focus:ring-2 focus:ring-white/20"
                   />
+
+                  {/* Botão — branco com texto roxo */}
                   <button
                     type="submit"
-                    className="inline-flex h-12 items-center gap-2 rounded-full bg-zinc-900 px-6 text-sm font-semibold text-white transition-all hover:bg-zinc-800 hover:shadow-lg active:scale-[0.98]"
+                    className="h-14 w-full rounded-full bg-white px-8 text-base font-bold text-[#5341CD] shadow-lg transition-all hover:bg-white/90 hover:shadow-xl active:scale-[0.98] md:w-auto md:whitespace-nowrap"
                   >
                     Inscreva-se
-                    <ArrowRight className="h-4 w-4" />
                   </button>
                 </form>
               </div>

@@ -129,12 +129,12 @@ export function Testimonials() {
             <motion.div
               key={name}
               variants={fadeInUp}
-              className="flex flex-col rounded-2xl border border-[#F5A623]/30 bg-white p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all duration-300 hover:border-[#F5A623]/60 hover:shadow-[0_8px_32px_rgba(245,166,35,0.10)]"
+              className="flex flex-col rounded-2xl border border-[#5341CD]/30 bg-white p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all duration-300 hover:border-[#5341CD]/60 hover:shadow-[0_8px_32px_rgba(83,65,205,0.10)]"
             >
-              {/* Aspas — laranja como na referência */}
+              {/* Aspas — roxo como na referência */}
               <span
                 className="mb-4 font-serif text-4xl font-black leading-none"
-                style={{ color: "#F5A623" }}
+                style={{ color: "#5341CD" }}
                 aria-hidden="true"
               >
                 "
@@ -145,11 +145,11 @@ export function Testimonials() {
                 {quote}
               </blockquote>
 
-              {/* Nome — laranja como na referência */}
+              {/* Nome — roxo como na referência */}
               <div className="mt-6 border-t border-zinc-100 pt-5">
                 <p
                   className="text-sm font-semibold"
-                  style={{ color: "#F5A623" }}
+                  style={{ color: "#5341CD" }}
                 >
                   {name}
                 </p>

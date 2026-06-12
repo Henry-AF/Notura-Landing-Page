@@ -97,9 +97,9 @@ export function FAQ() {
                     )}
                   </AnimatePresence>
 
-                  {/* Divisor laranja — igual à referência */}
+                  {/* Divisor roxo — igual à referência */}
                   {!isLast && (
-                    <div className="h-px w-full bg-[#F5A623]/40" />
+                    <div className="h-px w-full bg-[#5341CD]/40" />
                   )}
                 </div>
               );
