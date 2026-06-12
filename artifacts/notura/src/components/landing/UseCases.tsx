@@ -1,10 +1,14 @@
-import { useMemo, useState } from "react";
+"use client";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
 import { fadeInUp } from "@/lib/animations";
 import { LOGIN_URL } from "@/components/landing/constants";
+import { OrbGL } from "@/components/ui/OrbGL";
 
+// Hue em graus para cada segmento — ajusta a cor base do shader do Orb
+// O shader usa roxo/ciano/azul escuro como base e o hue rotaciona essa paleta
 const useCases = [
   {
     label: "Saúde",
@@ -12,7 +16,8 @@ const useCases = [
     description:
       "Rounds, passagens de plantão e reuniões clínicas sem ata formal. O Notura transcreve atendimentos e reuniões de equipe, gerando resumos estruturados e prontos para o prontuário — rastreáveis e conformes à LGPD.",
     cta: "Começar grátis para clínicas",
-    colors: ["#38bdf8", "#6366f1", "#34d399"],
+    hue: 160,        // ciano-verde
+    silkColor: "#0ea5e9",
   },
   {
     label: "Startups",
@@ -20,7 +25,8 @@ const useCases = [
     description:
       "Daily, sprint review e 1:1s terminam sem registro claro. Com o Notura, cada reunião vira um artefato de produto com decisões e action items prontos para o Linear, Jira ou Notion — sem copiar e colar.",
     cta: "Experimentar para startups",
-    colors: ["#8b5cf6", "#5341CD", "#818cf8"],
+    hue: 260,        // roxo brand
+    silkColor: "#5341CD",
   },
   {
     label: "RH",
@@ -28,7 +34,8 @@ const useCases = [
     description:
       "Entrevistas, feedbacks e PDIs ficam só na cabeça do recrutador. Transcrição automática com resumo estruturado — histórico completo de cada candidato, pesquisável e organizado.",
     cta: "Experimentar para RH",
-    colors: ["#f472b6", "#fb923c", "#c084fc"],
+    hue: 320,        // rosa
+    silkColor: "#f472b6",
   },
   {
     label: "Gestão pública",
@@ -36,7 +43,8 @@ const useCases = [
     description:
       "Atas de reunião levam dias para serem produzidas e ninguém as lê. O Notura gera a ata automaticamente em segundos, no formato correto, assinável e arquivável.",
     cta: "Experimentar para gestão",
-    colors: ["#34d399", "#38bdf8", "#a3e635"],
+    hue: 120,        // verde
+    silkColor: "#34d399",
   },
   {
     label: "Consultoria",
@@ -44,7 +52,8 @@ const useCases = [
     description:
       "Reuniões com clientes geram tarefas que se perdem no e-mail. Cada reunião de projeto vira um relatório de status automático entregue ao cliente em minutos.",
     cta: "Experimentar para consultoria",
-    colors: ["#fbbf24", "#f87171", "#fb923c"],
+    hue: 30,         // âmbar
+    silkColor: "#fbbf24",
   },
 ];
 
@@ -53,37 +62,23 @@ export function UseCases() {
   const [activeIndex, setActiveIndex] = useState(0);
   const active = useCases[activeIndex];
 
-  const orbStyle = useMemo(() => {
-    const [first, second, third] = active.colors;
-    return {
-      background: `
-        radial-gradient(circle at 30% 30%, ${first} 0%, transparent 40%),
-        radial-gradient(circle at 70% 28%, ${second} 0%, transparent 42%),
-        radial-gradient(circle at 50% 75%, ${third} 0%, transparent 44%),
-        conic-gradient(from 180deg, ${first}, ${second}, ${third}, ${first})
-      `,
-      boxShadow: `0 0 80px ${first}55, 0 0 120px ${second}35, 0 0 160px ${third}25`,
-    };
-  }, [active.colors]);
-
   const goTo = (direction: -1 | 1) => {
-    setActiveIndex((current) => (current + direction + useCases.length) % useCases.length);
+    setActiveIndex((i) => (i + direction + useCases.length) % useCases.length);
   };
 
   return (
-    <section id="usecases" className="bg-[#fcfcfe] py-[7.5rem] md:py-[8.5rem]" ref={ref}>
-      <div className="page-shell">
+    <section id="usecases" className="relative overflow-hidden bg-[#fcfcfe] py-[7.5rem] md:py-[8.5rem]" ref={ref}>
+
+      <div className="page-shell relative z-10">
         <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={fadeInUp}
           className="mx-auto max-w-5xl text-center"
         >
-          {/* Eyebrow */}
           <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-[var(--notura-primary)]">
             Para o seu segmento
           </p>
-
           <h2 className="font-display text-3xl font-semibold tracking-[-0.03em] text-zinc-900 md:text-5xl md:leading-[1.08]">
             Feito para como o seu time trabalha
           </h2>
@@ -113,8 +108,10 @@ export function UseCases() {
           </div>
         </motion.div>
 
-        {/* Orb + conteúdo */}
+        {/* Orb WebGL + conteúdo */}
         <div className="relative mx-auto mt-16 max-w-5xl px-6 py-6 md:px-16 md:py-10">
+
+          {/* Setas de navegação */}
           <button
             type="button"
             onClick={() => goTo(-1)}
@@ -123,7 +120,6 @@ export function UseCases() {
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-
           <button
             type="button"
             onClick={() => goTo(1)}
@@ -134,31 +130,34 @@ export function UseCases() {
           </button>
 
           <div className="flex flex-col items-center justify-center">
-            {/* Orb animado */}
-            <motion.div
-              key={active.label}
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="relative flex items-center justify-center"
-            >
-              {/* Glow externo */}
-              <div
-                className="absolute inset-0 rounded-full blur-3xl transition-all duration-500"
-                style={{ ...orbStyle, transform: "scale(1.18)", opacity: 0.48 }}
-              />
-              {/* Esfera */}
-              <div
-                className="animate-morph-orb relative h-[17.5rem] w-[17.5rem] rounded-full transition-all duration-500"
-                style={orbStyle}
-              />
-            </motion.div>
+
+            {/* Orb WebGL com animação por hue */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active.label}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="relative"
+                style={{ width: 280, height: 280 }}
+              >
+                <OrbGL
+                  hue={active.hue}
+                  hoverIntensity={0.39}
+                  rotateOnHover={true}
+                  forceHoverState={false}
+                  backgroundColor="#fcfcfe"
+                  className="h-full w-full"
+                />
+              </motion.div>
+            </AnimatePresence>
 
             {/* Conteúdo da tab */}
             <div className="mt-10 min-h-[13rem] max-w-2xl">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={active.label}
+                  key={active.label + "-content"}
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
@@ -182,6 +181,7 @@ export function UseCases() {
                 </motion.div>
               </AnimatePresence>
             </div>
+
           </div>
         </div>
       </div>

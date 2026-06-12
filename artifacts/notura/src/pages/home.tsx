@@ -1,8 +1,7 @@
 import { AuthorityBar } from "@/components/landing/AuthorityBar";
-import { CTAFinal } from "@/components/landing/CTAFinal";
 import { FAQ } from "@/components/landing/FAQ";
 import { Features } from "@/components/landing/Features";
-import { Footer as LandingFooter } from "@/components/landing/Footer";
+import { Footer } from "@/components/landing/Footer";
 import { Hero } from "@/components/landing/Hero";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { Navbar } from "@/components/landing/Navbar";
@@ -12,11 +11,7 @@ import { SocialProofFullWidth } from "@/components/landing/social-proof-full-wid
 import { Testimonials } from "@/components/landing/Testimonials";
 import { UseCases } from "@/components/landing/UseCases";
 
-export const NavBar = Navbar;
-export const PricingSection = Pricing;
-export const Footer = LandingFooter;
-
-export default function Produtividade() {
+export default function Home() {
   return (
     <div className="min-h-[100dvh] bg-[var(--notura-violet-50)] text-foreground selection:bg-[var(--notura-primary-glow)]">
       <Navbar />
@@ -31,9 +26,8 @@ export default function Produtividade() {
         <Pricing />
         <FAQ />
         <Newsletter />
-        <CTAFinal />
       </main>
-      <LandingFooter />
+      <Footer />
     </div>
   );
 }

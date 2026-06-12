@@ -17,12 +17,12 @@ export function Newsletter() {
 
   return (
     <section ref={ref} className="relative overflow-hidden py-20 md:py-24">
-      {/* Fundo gradiente laranja/amarelo — igual à referência */}
+      {/* Fundo gradiente roxo — igual ao roxo da marca */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(120deg, #FDDEA0 0%, #F9A825 35%, #F97316 60%, #FDD89A 100%)",
+            "linear-gradient(120deg, #EEF0FF 0%, #C4B5FD 35%, #9B8AFB 60%, #DDD8F5 100%)",
         }}
       />
 
