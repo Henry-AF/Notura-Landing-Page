@@ -115,7 +115,7 @@ export function Newsletter() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Digite seu melhor e-mail"
-                    className="h-40 w-full flex-1 rounded-full border border-white/20 bg-white/15 px-6 text-base text-white placeholder-white/50 outline-none backdrop-blur-sm transition focus:border-white/40 focus:bg-white/20 focus:ring-2 focus:ring-white/20"
+                    className="h-15 w-full flex-1 rounded-full border border-white/20 bg-white/15 px-6 text-base text-white placeholder-white/50 outline-none backdrop-blur-sm transition focus:border-white/40 focus:bg-white/20 focus:ring-2 focus:ring-white/20"
                   />
 
                   {/* Botão — branco com texto roxo */}
