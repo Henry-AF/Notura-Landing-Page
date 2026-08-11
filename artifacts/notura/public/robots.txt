@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://notura.com.br/sitemap.xml
